@@ -155,8 +155,8 @@ alias pkg_info="\pkg_info ${PKGOPT}"
 alias mupdf="mupdf-gl -XJ"
 
 # network
-alias edit_dns="ssh -t sdk@dns.codevoid.de \"doas vim /var/nsd/zones/master/codevoid.de && doas nsd-control reload\""
-alias edit_gopher="vim sftp://sdk@gopher.codevoid.de/../www/htdocs/gopher/"
+alias edit_dns="ssh -t dns.codevoid.de \"doas vim /var/nsd/zones/master/codevoid.de && doas nsd-control reload\""
+alias edit_gopher="vim sftp://gopher.codevoid.de/../www/htdocs/gopher/"
 alias ts="doas tailscale"
 ts-vpn() { doas tailscale up --exit-node=100.89.60.42; }
 
@@ -229,8 +229,8 @@ alias hn="sacc gopher://codevoid.de/1/hn"
 alias cv="sacc gopher://codevoid.de"
 
 # pim
-alias notes="vim scp://sdk@shell.codevoid.de/work/notes/notes.txt"
-alias events="vim scp://sdk@shell.codevoid.de/work/notes/events.txt"
+alias notes="vim scp://shell.codevoid.de/work/notes/notes.txt"
+alias events="vim scp://shell.codevoid.de/work/notes/events.txt"
 caly() { ncal -C $(date +%Y); }
 
 # music
@@ -367,29 +367,30 @@ alias omisc="mutt -f $MUTT_HOST/Virtual/OpenBSD-misc"
 # OPENBSD PORT TOOLS
 ########################################################################
 
-alias cvs-diff='cvs -d sdk@cvs.openbsd.org:/cvs diff -uNp'
-alias cvs-release='cvs -d sdk@cvs.openbsd.org:/cvs release'
-alias cvs-update="doas cvs -z 5 -d sdk@cvs.openbsd.org:/cvs -q up -Pd -A"
+CVSDIR=/usr
+CVSROOT=sdk@cvs.openbsd.org:/cvs
+
+alias cvs-diff="cvs -d $CVSROOT diff -uNp"
+alias cvs-release="cvs -d $CVSROOT release"
+alias cvs-update="doas cvs -z 1 -d $CVSROOT -q up -Pd -A"
 
 cvs-import-simulate() {(
-     set -ex
-    _dir=$(basename $PWD)
-    _pwd=$(dirname $PWD)
+    set -ex
     cvs -d sdk@cvs.openbsd.org:/cvs -n import \
-                  ports/$_pwd/$_dir sdk sdk_$(date +"%Y%m%d")
+        ports/$(dirname $PWD)/$(basename $PWD) sdk sdk_$(date +"%Y%m%d")
 )}
 
-CVSDIR=/usr/ports
-cvs-checkout-ports() {( set -x; cd $CVSDIR && doas cvs -z 1 -qd sdk@cvs.openbsd.org:/cvs checkout -P ports; )}
-cvs-checkout-src() {( set -x; cd $CVSDIR && doas cvs -z 1 -qd sdk@cvs.openbsd.org:/cvs checkout -P src; )}
-cvs-checkout-www() {( set -x; cd $CVSDIR && doas cvs -z 1 -qd sdk@cvs.openbsd.org:/cvs checkout -P www; )}
-cvs-checkout-xenocara() {( set -x; cd $CVSDIR && doas cvs -z 1 -qd sdk@cvs.openbsd.org:/cvs checkout -P xenocara; )}
 
-cvs-update-ports() {( set -x; cd $CVSDIR/ports && doas cvs -z 1 -d sdk@cvs.openbsd.org:/cvs -q up -Pd -A;)}
-cvs-update-src() {( set -x; cd $CVSDIR/src && doas cvs -z 1 -d sdk@cvs.openbsd.org:/cvs -q up -Pd -A;)}
-cvs-update-www() {( set -x; cd $CVSDIR/www && doas cvs -z 1 -d sdk@cvs.openbsd.org:/cvs -q up -Pd -A;)}
-cvs-update-xenocara() {( set -x; cd $CVSDIR/xenocara && doas cvs -z 1 -d sdk@cvs.openbsd.org:/cvs -q up -Pd -A;)}
-cvs-commit() {( set -x; doas cvs -d sdk@cvs.openbsd.org:/cvs commit $@; )}
+cvs-checkout-ports() {( set -x; cd $CVSDIR && doas cvs -z 1 -qd $CVSROOT checkout -P ports; )}
+cvs-checkout-src() {( set -x; cd $CVSDIR && doas cvs -z 1 -qd $CVSROOT checkout -P src; )}
+cvs-checkout-www() {( set -x; cd $CVSDIR && doas cvs -z 1 -qd $CVSROOT checkout -P www; )}
+cvs-checkout-xenocara() {( set -x; cd $CVSDIR && doas cvs -z 1 -qd $CVSROOT checkout -P xenocara; )}
+
+cvs-update-ports() {( set -x; cd $CVSDIR/ports && doas cvs -z 1 -d $CVSROOT -q up -Pd -A;)}
+cvs-update-src() {( set -x; cd $CVSDIR/src && doas cvs -z 1 -d $CVSROOT -q up -Pd -A;)}
+cvs-update-www() {( set -x; cd $CVSDIR/www && doas cvs -z 1 -d $CVSROOT -q up -Pd -A;)}
+cvs-update-xenocara() {( set -x; cd $CVSDIR/xenocara && doas cvs -z 1 -d $CVSROOT -q up -Pd -A;)}
+cvs-commit() {( set -x; doas cvs -d $CVSROOT commit $@; )}
 
 cvs-checkout-all() {
     cvs-checkout-src
@@ -403,6 +404,7 @@ cvs-update-all() {
     cvs-update-ports
     cvs-update-www
 }
+
 alias update-ksh="cd /usr/src/bin/ksh \
                     && doas make clean \
                     && doas make obj \
@@ -514,14 +516,11 @@ dotfiles_init() {
 # FILE SHARING
 ########################################################################
 
-dohttp_clean() {
-    ssh sdk@codevoid.de rm -rvf "/home/www/htdocs/http/*";
-}
 dohttp_upload() {
     local _file=$(readlink -f "$1");
     local _name=$(cleanstring "$1");
-    scp -r "$_file" sdk@codevoid.de:/home/www/htdocs/http/$_name
-    ssh -t sdk@codevoid.de doas chown -R sdk:www "/home/www/htdocs/http/$_name"
+    scp -r "$_file" codevoid.de:/home/www/htdocs/http/$_name
+    ssh -t codevoid.de doas chown -R sdk:www "/home/www/htdocs/http/$_name"
     printf "https://codevoid.de/h/$_name\n";
 }
 cleanstring() {
@@ -534,7 +533,6 @@ cleanstring() {
 ########################################################################
 YTDL_AGENT="Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4506.0 Safari/537.36"
 YTDL_OPTS="-i --no-part --abort-on-unavailable-fragment --buffer-size 16K --fragment-retries 100 --http-chunk-size 10M"
-alias youtube-dl="yt-dlp"
 ytdl() {
     local FMT="bestvideo[ext=mp4][height<=1080]+bestaudio[ext=m4a]/best[ext=mp4]/best"
     yt-dlp $YTDL_OPTS --user-agent "$YTDL_AGENT" -f "$FMT" "$@";
@@ -569,21 +567,6 @@ ytdl_audio() {
 # SCREEN CONFIGURATION
 ########################################################################
 
-devdir() {
-    cd "$(cat /home/sdk/.dev/dir)"
-}
-barrier_s() {
-    barriers -n $(hostname -s) --enable-crypto
-}
-barrier_c() {
-    if [ -z "$1" ]
-    then
-        echo "No IP provided, trying 10.10.10.2"
-        barrierc -n $(hostname -s) --enable-crypto 10.10.10.2
-    else
-        barrierc -n $(hostname -s) --enable-crypto $1
-    fi
-}
 xr_primary() {
     xrandr --listmonitors | awk '/ 0:/{ print $4 }'
 }
