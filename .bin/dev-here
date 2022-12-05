@@ -1,0 +1,30 @@
+#!/bin/sh
+. ~/.bin/_config
+doas chown -R sdk ${DEVDIRPATH}
+set -xe
+
+# save dev bookmark
+DEVDIR="${PWD}"
+echo "${DEVDIR}" > "${DEVDIRPATH}/dir"
+
+# create files list
+find "${DEVDIR}" -type f \
+            \( -name "*.c" \
+            -o -name "*.cc" \
+            -o -name "*.cpp" \
+            -o -name "*.c" \
+            -o -name "*.h" \
+            -o -name "*.hh" \
+            -o -name "*.hpp" \
+            \) > ${DEVDIRPATH}/files
+
+# create cscope database
+cscope -qbkCRvf ${DEVDIRPATH}/cscope.out -i${DEVDIRPATH}/files
+
+# create tags file
+ectags --sort=yes \
+       --fields=afiksSt \
+       --extra=fq \
+       --totals=yes \
+       -L ${DEVDIRPATH}/files \
+       -f ${DEVDIRPATH}/tags
