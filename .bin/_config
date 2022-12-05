@@ -1,0 +1,66 @@
+#!/bin/sh
+# configuration to be sourced by scripts
+
+#
+# FONTS
+#
+DFONT="FuraCodeNerdFont-13" # Font for dmenu
+SFONT="FuraCodeNerdFont-13" # productive
+BFONT="FuraCodeNerdFont-20" # couch distance
+HFONT="FuraCodeNerdFont-21" # presentation
+
+#
+# TERMINALS
+#
+STERM="st -f $SFONT"
+BTERM="st -f $BFONT"
+HTERM="st -f $HFONT"
+
+#
+# DMENU
+#
+
+# NOTION ORANGE
+# DMENUOPTS="-fn '$DFONT'  -nb #121212 -nf #707070 -sf #FFA600 -sb #121212 -i -f"
+
+# SPECTRWM GREY
+DMENUOPTS="-fn '$DFONT'  -nb #121212 -nf #707070 -sf #CCCCCC -sb #121212 -i -f"
+
+DMENU_CMD="dmenu $DMENUOPTS"
+DMENURUN_CMD="dmenu_run $DMENUOPTS"
+
+#
+# NOTIFICATION
+# $1 title $2 content
+notify() {
+    twmnc -c "$@"
+}
+NOTIFY_CMD="notify"
+
+#
+# DEVELOPMENT
+#
+DEVDIRPATH=/home/sdk/.dev
+DEVDIR="$(cat "${DEVDIRPATH}/dir")"
+
+#
+# PIM
+#
+PIMDIR="/home/sdk/pim"
+
+#
+# REMOTE
+#
+USER="sdk"
+DOMAIN="codevoid.de"
+RPATH="/home/www/htdocs/gopher"
+
+#
+# CONNECT TO GPG-AGENT
+#
+export GPG_TTY=$(tty)
+export GPG_AGENT_INFO="$HOME/.gnupg/S.gpg-agent:0:1"
+export SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
+export SSH_AUTH_SOCK_EXTRA=${SSH_AUTH_SOCK%%.ssh}.extra
+gpg-connect-agent /bye
+
