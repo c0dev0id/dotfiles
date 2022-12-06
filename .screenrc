@@ -1,0 +1,28 @@
+bind R eval "source $HOME/.screenrc" "echo '.screenrc reloaded!'"
+bind + resize +2
+bind - resize -2
+startup_message off
+shell ksh
+
+defscrollback 8096
+defutf8 on
+defencoding utf8
+setenv LANG "de_DE.UTF-8"
+setenv LC_ALL "de_DE.UTF-8"
+setenv LC_CTYPE "de_DE.UTF-8"
+setenv LC_LANG "de_DE.UTF-8"
+setenv LC_NUMERIC "en_US.UTF-8"
+setenv LC_MESSAGES "C"
+setenv TERM "screen-256color"
+
+maptimeout 5
+term screen-256color
+
+nonblock on
+vbell off
+
+sorendition wk
+hardstatus alwayslastline
+backtick 10 5 5 whoami
+hardstatus string '%{= kG}%{g}[ %{G}%H %{g}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B} %m-%d %{W}%c %{g}]'
+

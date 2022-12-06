@@ -1,0 +1,293 @@
+# i3 config
+
+# Mod == Alt_L
+set $mod Mod1
+set $term sterm
+
+# Set font
+font pango:Spleen 12
+
+# Set color scheme (somewhat brown'ish)
+set $base00 #181818
+set $base01 #282828
+set $base02 #383838
+set $base03 #585858
+set $base04 #b8b8b8
+set $base05 #d8d8d8
+set $base06 #e8e8e8
+set $base07 #f8f8f8
+set $base08 #FF4642
+set $base09 #dc9656
+set $base0A #f7ca88
+set $base0B #a1b56c
+set $base0C #86c1b9
+set $base0D #7cafc2
+set $base0E #ba8baf
+set $base0F #a16946
+
+# default ws names
+set $workspace1  "1:[1]"
+set $workspace2  "2:[2]"
+set $workspace3  "3:[3]"
+set $workspace4  "4:[4]"
+set $workspace5  "5:[5]"
+set $workspace6  "6:[6]"
+set $workspace7  "7:[7]"
+set $workspace8  "8:[8]"
+set $workspace9  "9:[9]"
+set $workspace10 "10:[10]"
+
+# Use Mouse+$mod to drag floating windows to their wanted position
+floating_modifier $mod
+
+# kill focused window
+bindsym $mod+Shift+Q kill
+
+# change focus
+bindsym $mod+h focus left
+bindsym $mod+j focus down
+bindsym $mod+k focus up
+bindsym $mod+l focus right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Left focus left
+bindsym $mod+Down focus down
+bindsym $mod+Up focus up
+bindsym $mod+Right focus right
+
+# move focused window
+bindsym $mod+Shift+h move left
+bindsym $mod+Shift+j move down
+bindsym $mod+Shift+k move up
+bindsym $mod+Shift+l move right
+
+# alternatively, you can use the cursor keys:
+bindsym $mod+Shift+Left move left
+bindsym $mod+Shift+Down move down
+bindsym $mod+Shift+Up move up
+bindsym $mod+Shift+Right move right
+
+# split in horizontal orientation
+# bindsym $mod+h split h
+
+# split in vertical orientation
+bindsym $mod+v split toggle
+bindsym $mod+period split toggle
+
+# enter fullscreen mode for the focused container
+bindsym $mod+f fullscreen
+popup_during_fullscreen smart
+
+# change container layout (stacked, tabbed, default)
+bindsym $mod+s layout stacked
+bindsym $mod+w layout tabbed
+bindsym $mod+e layout default
+workspace_layout default
+
+# toggle tiling / floating
+bindsym $mod+Shift+space floating toggle
+
+# change focus between tiling / floating windows
+bindsym $mod+space focus mode_toggle
+
+# focus the parent container
+bindsym $mod+a focus parent
+
+# focus the child container
+bindsym $mod+Shift+a focus child
+
+# switch to workspace
+bindsym $mod+1 workspace number $workspace1
+bindsym $mod+2 workspace number $workspace2
+bindsym $mod+3 workspace number $workspace3
+bindsym $mod+4 workspace number $workspace4
+bindsym $mod+5 workspace number $workspace5
+bindsym $mod+6 workspace number $workspace6
+bindsym $mod+7 workspace number $workspace7
+bindsym $mod+8 workspace number $workspace8
+bindsym $mod+9 workspace number $workspace9
+bindsym $mod+0 workspace number $workspace10
+
+# cycle through workspace
+bindsym $mod+Next workspace next
+bindsym $mod+Prior workspace prev
+
+# move focused container to workspace
+bindsym $mod+Shift+exclam move container to workspace number $workspace1
+bindsym $mod+Shift+quotedbl move container to workspace number $workspace2
+bindsym $mod+Shift+section move container to workspace number $workspace3
+bindsym $mod+Shift+dollar move container to workspace number $workspace4
+bindsym $mod+Shift+percent move container to workspace number $workspace5
+bindsym $mod+Shift+ampersand move container to workspace number $workspace6
+bindsym $mod+Shift+slash move container to workspace number $workspace7
+bindsym $mod+Shift+parenleft move container to workspace number $workspace8
+bindsym $mod+Shift+parenright move container to workspace number $workspace9
+bindsym $mod+Shift+equal move container to workspace number $workspace10
+
+# move workspace to other monitor
+bindsym $mod+Shift+greater move workspace to output right
+bindsym $mod+Shift+less move workspace to output left
+
+# restart i3 inplace (preserves your layout/session, can be used to upgrade i3)
+bindsym $mod+Shift+Home restart
+
+# exit i3 (logs you out of your X session)
+bindsym $mod+Shift+Delete exec "i3-nagbar -t warning -f profont-10  -m 'Do you really want to exit i3?' -b 'Yes, exit i3' 'i3-msg exit'"
+
+# resize window (you can also use the mouse for that)
+mode "resize" {
+  # These bindings trigger as soon as you enter the resize mode
+  # > Pressing left will shrink the window’s width.
+  # > Pressing right will grow the window’s width.
+  # > Pressing up will shrink the window’s height.
+  # > Pressing down will grow the window’s height.
+
+  bindsym Left resize shrink width 2 px or 2 ppt
+  bindsym Up resize grow height 2 px or 2 ppt
+  bindsym Down resize shrink height 2 px or 2 ppt
+  bindsym Right resize grow width 2 px or 2 ppt
+
+  bindsym h resize shrink width 2 px or 2 ppt
+  bindsym j resize shrink height 2 px or 2 ppt
+  bindsym k resize grow height 2 px or 2 ppt
+  bindsym l resize grow width 2 px or 2 ppt
+
+  # back to normal: Enter or Escape
+  bindsym Return mode "default"
+  bindsym Escape mode "default"
+}
+bindsym $mod+r mode "resize"
+
+# Go to last workspace
+bindsym $mod+Tab workspace back_and_forth
+
+# temporarily disable i3 shortcuts (for emacs for example)
+mode "shortcuts_disabled" {
+  bindsym $mod+dead_acute mode "default"
+}
+bindsym $mod+dead_acute mode "shortcuts_disabled"
+
+# marks
+show_marks yes
+
+# Program Workspaces
+assign [class="Deadbeef"] $workspace10
+
+# No titlebar
+for_window [class="^.*"] border pixel 1
+
+# Floating
+for_window [class="Bitcoin-qt"] floating enable
+for_window [class="Bitmessagemain.py"] floating enable
+for_window [class="Electrum"] floating enable
+for_window [class="Litecoin-qt"] floating enable
+for_window [class="Lxappearance"] floating enable
+for_window [class="Namecoin-qt"] floating enable
+for_window [class="Networkmgr"] floating enable
+for_window [class="Pavucontrol"] floating enable
+for_window [class="Pinentry-gtk-2"] floating enable
+for_window [class="Seahorse"] floating enable
+for_window [class="Telegram"] floating enable, sticky enable, resize set 1371 819, move position 273 204
+for_window [title="^ScummVM.*"] floating enable
+
+# Window behavior
+#for_window [class="SAP GUI for Java"] floating enable, resize set 335 898, move position 1547 90
+for_window [class="Caja"] floating enable
+for_window [class="Ding"] floating enable, sticky enable, resize set +800 320, move position 1118 64
+for_window [class="Pidgin" window_role="buddy_list"] floating enable, sticky enable, resize set 320 600, move position 1600 64
+for_window [class="Pidgin" window_role="conversation"] floating enable, sticky enable
+for_window [class="Seafile Client" title="Cloud File Browser"] floating enable, sticky enable
+for_window [class="Seafile Client" title="Seafile"] floating enable, sticky enable, resize set 320 600, move position 1511 64
+for_window [class="Wine"] floating enable
+for_window [class="mpv"] floating enable, sticky enable
+for_window [class="wine.exe"] floating enable
+
+# Focus exlusion list
+no_focus [class="mpv"]
+
+# move mpv around with a keypress
+#bindsym $mod+F1 [class="mpv"] move position 0    30
+#bindsym $mod+F2 [class="mpv"] move position 1280 30
+#bindsym $mod+F3 [class="mpv"] move position 0    760
+#bindsym $mod+F4 [class="mpv"] move position 1280 760
+
+# limit the floating container
+floating_minimum_size 75 x 50
+floating_maximum_size 5000 x 5000
+
+# show where the next window will be created
+hide_edge_borders none
+new_window pixel 1
+new_float pixel 1
+
+# read alert for WS activity
+force_display_urgency_hint 2000 ms
+focus_on_window_activation urgent
+
+# Widow Colours
+#                       border  background text    indicator
+client.focused          $base03 $base03    $base07 $base08
+client.focused_inactive $base00 $base00    $base03 $base08
+client.unfocused        $base01 $base00    $base03 $base08
+client.urgent           $base08 $base08    $base00 $base08
+
+# Start i3bar to display a workspace bar (plus the system information i3status
+# finds out, if available)
+bar {
+  status_command i3status -c ~/.i3/i3status.conf
+  position top
+  workspace_buttons yes
+  binding_mode_indicator yes
+  strip_workspace_numbers yes
+  mode dock
+  hidden_state show
+  binding_mode_indicator yes
+  strip_workspace_numbers yes
+  colors {
+    separator $base03
+    background $base00
+    statusline $base05
+    #                  border  background text
+    focused_workspace  $base02 $base02    $base07
+    active_workspace   $base00 $base00    $base07
+    inactive_workspace $base00 $base00    $base07
+    urgent_workspace   $base00 $base00    $base09
+  }
+}
+
+## Volume & Media Bindings
+bindsym XF86AudioLowerVolume exec pkill -SIGUSR1 i3status
+bindsym XF86AudioRaiseVolume exec pkill -SIGUSR1 i3status
+bindsym XF86AudioMute exec pkill -SIGUSR1 i3status
+
+# deadbeef
+#bindsym XF86AudioPlay exec --no-startup-id exec deadbeef --play-pause
+#bindsym XF86AudioPause exec --no-startup-id exec deadbeef --toggle-pause
+#bindsym XF86AudioNext exec --no-startup-id exec deadbeef --next
+#bindsym XF86AudioPrev exec --no-startup-id exec deadbeef --prev
+
+# keyboard leds & lcd brightness
+bindsym XF86MonBrightnessUp exec --no-startup-id xbacklight +2
+bindsym XF86MonBrightnessDown exec --no-startup-id xbacklight -2
+
+# scratchpad
+bindsym $mod+minus scratchpad show
+bindsym $mod+Shift+minus move scratchpad, scratchpad show
+
+# start dmenu (a program launcher)
+bindsym $mod+Return fullscreen disable, exec bterm
+bindsym $mod+Shift+Return fullscreen disable, exec sterm
+bindsym $mod+Control Return fullscreen disable, exec hterm
+bindsym $mod+End exec i3lock -c "#000000"
+bindsym $mod+D exec dexec
+#bindsym $mod+A exec dexec_apps
+bindsym $mod+Shift+P exec dexec_pass
+bindsym $mod+P exec dexec_pim
+#bindsym $mod+S exec dexec_ssh
+# bindsym $mod+A exec dexec_apps
+bindsym $mod+Shift+W exec dexec_work
+bindsym $mod+Shift+F fullscreen disable, exec dexec_browser
+bindsym $mod+Q kill
+
+# this is a workaround as the workspace is named wrong after start
+#exec i3-msg "rename workspace 1 to $workspace1"
