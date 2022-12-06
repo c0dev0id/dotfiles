@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+. $HOME/.bin/_config
+
+shopt -s nullglob globstar
+
+prefix=${PASSWORD_STORE_DIR-~/.password-store}
+password_files=( "$prefix"/**/*.gpg )
+password_files=( "${password_files[@]#"$prefix"/}" )
+password_files=( "${password_files[@]%.gpg}" )
+password=$(printf '%s\n' "${password_files[@]}" | $DMENU_CMD -p Password)
+
+[[ -n $password ]] || exit
+
+# read password file
+password_out=$(pass "$password" 2> /dev/null)
+
+# copy password line
+printf "%s" "$password_out" | head -1 | xclip -r
+
+# extract additional information
+password_info=$(printf "%s" "$password_out" | grep -Ei 'login|user')
+url_info=$(printf "%s" "$password_out" | grep -Ei '^url' | awk -F"[ :]*" '{ $1=""; print $0 }' )
+
+# show desktop notification
+if [[ -n $password_info ]]; then
+    notify pass "$(printf '%s' "$password_info")"
+else
+    notify pass "No username provided."
+fi

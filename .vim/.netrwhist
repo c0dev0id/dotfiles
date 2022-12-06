@@ -1,5 +1,6 @@
 let g:netrw_dirhistmax  =10
-let g:netrw_dirhistcnt =3
+let g:netrw_dirhistcnt =4
+let g:netrw_dirhist_4='/home/sdk/.bin'
 let g:netrw_dirhist_3='/home/sdk'
 let g:netrw_dirhist_2='/home/sdk/.vim'
 let g:netrw_dirhist_1='sftp://sdk@gopher.codevoid.de/../www/htdocs/gopher/'
@@ -9,4 +10,3 @@ let g:netrw_dirhist_8='/home/sdk/code/bar'
 let g:netrw_dirhist_7='/home/sdk/code/drist'
 let g:netrw_dirhist_6='/home/sdk/code'
 let g:netrw_dirhist_5='/home/sdk/.FontForge'
-let g:netrw_dirhist_4='/home/sdk/.audacity-data'

@@ -1,0 +1,25 @@
+#!/bin/sh
+
+# provides DMENU_CMD (dmenu + color parameter)
+. $HOME/.bin/_config
+
+cd /usr/ports
+DIR=$( ls -1d */* mystuff/*/* | egrep -v '^pobj|^distfiles|^log|^plist|^packages|CVS|Makefile|\.tgz$' | dmenu -p "DIR:" $DMENUOPTS -l 20);
+if [ ! -z "$DIR" ]; then
+    cd /usr/ports/$DIR
+    DIR2=$(printf "%s\n\n%s\n%s\n%s\n\nCVS %s\n" \
+            "/usr/ports/$DIR" \
+            "Package:    $(make show=FULLPKGNAME)" \
+            "Maintainer: $(make show=MAINTAINER)" \
+            "Homepage:   $(make show=HOMEPAGE)" \
+            "$(cvs log -Nl -rHEAD 2>&1 | awk '{ if ($0 ~ /^===/) p++;  if (p == 1) print $0; if ($0 ~ /^---/) p++; }')" \
+            | dmenu -p "INFO:" $DMENUOPTS -l 20)
+    if [ ! -z "$DIR2" ]; then
+        case "$DIR2" in
+            Homepage*) firefox "$(make show=HOMEPAGE)" & ;;
+            Package*) make show=FULLPKGNAME | xclip -r ;;
+            Maintainer*) make show=MAINTAINER | xclip -r ;;
+            *) cd "$DIR2"; port mark; dterm & ;;
+        esac
+    fi
+fi

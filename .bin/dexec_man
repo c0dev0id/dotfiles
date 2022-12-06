@@ -1,0 +1,12 @@
+#!/bin/sh
+. $HOME/.bin/_config
+
+MAN="$( for i in $(jot 9 1); do
+    man -s $i -k . | awk -v i=$i -F"(" '{ gsub(", ","\n"i"-",$1); print i"-"$1}'
+done | $DMENU_CMD -p "Manpage" )"
+
+if [ ! -z "$MAN" ]; then
+    M="$(printf '%s' "$MAN" | cut -d"-" -f2)"
+    S="$(printf '%s' "$MAN" | cut -d"-" -f1)"
+    bterm -e man -s "$S" "$M"
+fi

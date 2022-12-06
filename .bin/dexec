@@ -1,0 +1,3 @@
+#!/bin/sh
+. $HOME/.bin/_config
+$DMENURUN_CMD -p Exec

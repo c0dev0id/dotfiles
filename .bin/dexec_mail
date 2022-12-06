@@ -1,0 +1,10 @@
+#!/bin/sh
+
+ALIASES=$(ksh -ic alias | grep ^mutt- | cut -d= -f1)
+
+. $HOME/.bin/_config
+MAILBOX="imaps://mail.codevoid.de"
+
+SEL=$(printf "$ALIASES" | $DMENU_CMD -p Mutt)
+
+[ -z "$SEL" ] || texec $SEL

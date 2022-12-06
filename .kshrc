@@ -506,9 +506,8 @@ dotfiles_autoupdate() {
 
 dotfiles_init() {
     git --no-replace-objects clone --bare --depth 1 \
-        sdk@home.codevoid.de:.dotfiles.git $HOME/.cfg;
+        git@github.com:c0dev0id/dotfiles.git $HOME/.cfg;
     config config --local status.showUntrackedFiles no;
-    mkdir -p $HOME/.vim/undo $HOME/.vim/swapfiles $HOME/.vim/backup;
     config checkout -f
 }
 

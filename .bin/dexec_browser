@@ -1,0 +1,187 @@
+#!/bin/sh
+
+# dexec_browser
+# A multi browser launcher
+#
+# 1. choose input source
+#       (filtered-, full history, clipboad, manual entry)
+# 2. choose how to handle the input
+#       (can suggest a matching default)
+# 3. choose which browser to use
+#       (can suggest a matching default)
+
+HISTFILE="${HOME}/.browser_history"
+
+test -f ${HOME}/.bin/_config \
+    && . ${HOME}/.bin/_config \
+    || DMENU_CMD=dmenu
+
+test -f "${HISTFILE}" \
+    || touch "${HISTFILE}"
+
+PICKLIST="paste_from_clipboard
+pick_from_history
+-----------------
+$(cat "${HISTFILE}" \
+    | cut -b 23- \
+    | sort -u \
+    | egrep -v ' |^[^a-zA-Z0-9]' \
+    | fgrep '.')
+http://localhost"
+
+# show filtered history file
+# EXPECTS:  $PICKLIST $HISTFILE $DMENU_CMD
+# PROVIDES: $INPUT
+read_input() {
+    local S=$(printf '%s\n' "${PICKLIST}" \
+        | ${DMENU_CMD} -p "Bookmarks")
+
+    case "${S}" in
+        paste_from_clipboard)
+            S=$(xclip -o \
+                | head -n 1) ;;
+        pick_from_history)
+            S=$(sort -r "${HISTFILE}" \
+                | ${DMENU_CMD} -p "History:" \
+                |cut -b23-) ;;
+    esac
+
+    [ -z "${S}" ] && exit 0
+    INPUT="${S}"
+}
+
+# Decide how to open the thing
+# EXPECTS:  $INPUT $DMENU_CMD
+# PROVIDES: $URI
+choose_wrapper() {
+
+local SE="OPEN URL
+Amazon
+CPAN
+Crates.io
+DuckDuckGo Web Search
+DuckDuckGo Image Search
+Github
+Marc Info MessageID
+Marc Info OpenBSD Misc List
+Marc Info OpenBSD Ports CVS
+Marc Info OpenBSD Ports List
+Marc Info OpenBSD Tech List
+PDF Viewer
+SearX Web Search
+SearX Image Search
+Wikipedia DE
+Wikipedia EN
+InternetMovieDataBase (IMDB)
+OpenStreetMap (OSM)
+Grep.app
+Google Maps
+Youtube"
+
+    local C="$(printf '%s' "${INPUT}" \
+                    | head -n 1)"
+    case "${C}" in
+        *::*) DEFAULT="CPAN (default)"; ;;
+        http*) DEFAULT="OPEN (default)"; ;;
+        192.168.*) DEFAULT="OPEN (default)"; ;;
+        gopher*) DEFAULT="OPEN (default)"; ;;
+        www.*) DEFAULT="OPEN (default)"; ;;
+        \<*@*\>) DEFAULT="Marc Info Message ID (default)"; ;;
+        *.com|*.de|*.net|*.org) DEFAULT="OPEN (default)"; ;;
+        *.at|*.ch|*.social) DEFAULT="OPEN (default)"; ;;
+        *.io|*.sh|*.pw|*.party) DEFAULT="OPEN (default)"; ;;
+        *.coffee|*.me|*.cloud) DEFAULT="OPEN (default)"; ;;
+        *.[a-zA-Z]*/*) DEFAULT="OPEN (default)"; ;;
+        *) DEFAULT="DuckDuckGo Web Search (default)"; ;;
+    esac
+
+    local S="$(printf "%s\n%s" "${DEFAULT}" "${SE}" \
+                    | ${DMENU_CMD} -p "Search Where?")"
+    case "${S}" in
+        OPEN*)      URI="${C}"; ;;
+        Amazon*)    URI="https://www.amazon.de/s?k=${C}"; ;;
+        CPAN*)      URI="https://metacpan.org/search?q=${C}"; ;;
+        Crate*)     URI="https://crates.io/search?q=${C}"; ;;
+        Grep*)      URI="https://grep.app/search?q=${C}"; ;;
+        Github)     URI="https://github.com/search?q=${C}"; ;;
+        D*Web*)     URI="https://html.duckduckgo.com/html?q=${C}"; ;;
+        D*Ima*)     URI="https://duckduckgo.com/?q=${C}&iax=images&ia=images"; ;;
+        S*Web*)     URI="https://searx.bar/search?q=${C}&category_general=on"; ;;
+        S*Ima*)     URI="https://searx.bar/search?q=${C}&category_images=on"; ;;
+        W*DE*)      URI="https://de.m.wikipedia.org/wiki/Spezial:Suche/${C}"; ;;
+        W*EN*)      URI="https://en.m.wikipedia.org/wiki/Spezial:Search/${C}"; ;;
+        *IMDB*)     URI="https://www.imdb.com/find?q=${C}"; ;;
+        O*S*M*)     URI="https://www.openstreetmap.org/search?query=${C}"; ;;
+        G*Maps)     URI="https://www.google.com/maps/place/${C}"; ;;
+        You*be)     URI="https://m.youtube.com/results?sp=mAEA&search_query=${C}" ;;
+        M*I*ID*)    URI="https://marc.info/?i=$(printf '%s' "${C}" | tr -d '<>')"; ;;
+        M*I*P*List) URI="https://marc.info/?l=openbsd-ports&s=${C}&q=b"; ;;
+        M*I*T*List) URI="https://marc.info/?l=openbsd-tech&s=${C}&q=b"; ;;
+        M*I*M*List) URI="https://marc.info/?l=openbsd-misc&s=${C}&q=b"; ;;
+        M*I*P*CVS)  URI="https://marc.info/?l=openbsd-ports-cvs&s=${C}&q=b"; ;;
+        *) exit 0 ;;
+    esac
+}
+
+# Which browser shall we use?
+# EXPECTS:  $URI $DMENU_CMD
+# PROVIDES: $BROWSER
+choose_browser() {
+
+    case "${URI}" in
+        gopher://*)       DEFAULT="Lagrange (default)"; ;;
+        gemini://*)       DEFAULT="Lagrange (default)"; ;;
+        *.pdf|*.cb|*.ps)  DEFAULT="Zathura (default)"; ;;
+        192.168.*)        DEFAULT="Firefox (default)"; ;;
+        *github.com*)     DEFAULT="Firefox (default)"; ;;
+        *amazon.de*)      DEFAULT="Firefox (default)"; ;;
+        *twitter.com*)    DEFAULT="Firefox (default)"; ;;
+        *chaos.social*)   DEFAULT="Firefox (default)"; ;;
+        *hetzner.cloud*)  DEFAULT="Firefox (default)"; ;;
+        *hetzner.de*)     DEFAULT="Firefox (default)"; ;;
+        *duckduckgo.com/*images*) DEFAULT="Firefox (default)"; ;;
+        *codevoid.de*)    DEFAULT="Luakit (default)"; ;;
+        *google.*)        DEFAULT="Chrome (default)"; ;;
+        *youtube.com*)    DEFAULT="Chrome (default)"; ;;
+        *youtu.be*)       DEFAULT="Chrome (default)"; ;;
+        *bsd.network*)    DEFAULT="Chrome (default)"; ;;
+        *itch.io*)        DEFAULT="Chrome (default)"; ;;
+        *chat.uugrn.org*) DEFAULT="Chrome (default)"; ;;
+        *[./]amazon.*)    DEFAULT="Firefox (default)"; ;;
+        *comdirect.de*)   DEFAULT="Firefox (default)"; ;;
+        *motorradfreunde-rheinneckar.de*)   DEFAULT="Firefox (default)"; ;;
+        *polo-motorrad.com*)   DEFAULT="Firefox (default)"; ;;
+        *peek-cloppenburg.de*) DEFAULT="Firefox (default)"; ;;
+        *asos.com*)       DEFAULT="Firefox (default)"; ;;
+        *zalando.de*)     DEFAULT="Firefox (default)"; ;;
+        *) DEFAULT="Luakit (default)"; ;;
+    esac
+
+    local S="${DEFAULT}\nLuakit\nFirefox\nChrome\nQutebrowser\nNetsurf\nTor-Browser"
+    case $(echo "${S}" | ${DMENU_CMD} -p "Browser") in
+        Netsurf*)  BROWSER=netsurf-gtk3 ;;
+        Vimb*)     BROWSER=vimb ;;
+        Quteb*r*)  BROWSER=qutebrowser ;;
+        Surf*)     BROWSER=surf ;;
+        Otter*r*)  BROWSER=otter-browser ;;
+        Luakit*)   BROWSER="luakit -Un" ;;
+        Chrome*)   BROWSER=chrome ;;
+        Firefox*)  BROWSER=firefox ;;
+        Tor-B*r*)  BROWSER=tor-browser ;;
+        Zathura*)  BROWSER=zathura ;;
+        Lagrange*) BROWSER=lagrange ;;
+        *) exit 0;;
+    esac
+}
+
+save_history() {
+    printf '%s %s\n' "$(date +"%Y-%m-%d %H:%M:%S |")" "${INPUT}" \
+        >> "${HISTFILE}"
+}
+
+# main program starts here.
+read_input
+choose_wrapper
+choose_browser
+save_history
+exec $BROWSER "$(printf '%s' "${URI}" | sed 's/ /%20/g')"

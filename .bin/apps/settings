@@ -1,0 +1,34 @@
+#!/bin/sh
+. $HOME/.bin/_config
+
+SEL=$(printf "BACKLIGHT\nAUDIODEVICE\nLIDACTION\nSCREEN\nCONFIGFILES" \
+    | $DMENU_CMD -p Mailbox)
+
+case $SEL in
+    "BACKLIGHT")
+        S=$(printf "10\n20\n30\n40\n50\n60\n70\n80\n90\n100" | $DMENU_CMD -p Backlight)
+        doas wsconsctl display.brightness=$S
+        ;;
+    "AUDIODEVICE")
+        D=$(printf "0\n1\n2\n3\n4\n5" | $DMENU_CMD -p AudioDevice)
+        sndioctl server.device=$D
+        ;;
+    "LIDACTION")
+        A=$(printf "enable\ndisable" | $DMENU_CMD -p Lidaction)
+        case $A in
+            "enable") doas sysctl machdep.lidaction=1; ;;
+            "disable") doas sysctl machdep.lidaction=0; ;;
+        esac
+        ;;
+    "CONFIGFILES")
+        C=$(printf "cwmrc\nvimrc\nkshrc\nvimb\nmuttrc\nspectrwm" | sort | $DMENU_CMD -p File)
+        case $C in
+            "cwmrc") texec "vim $HOME/.cwmrc"; ;;
+            "mailcap") texec "vim $HOME/.mutt/mailcap"; ;;
+            "muttrc") texec "vim $HOME/.mutt/rc-common $HOME/.mutt/rc-account-*"; ;;
+            "spectrwm") texec "vim $HOME/.config/spectrwm/spectrwm.conf"; ;;
+            "vimb") texec "vim $HOME/.config/vimb/config"; ;;
+            "vimrc") texec "vim $HOME/.vim/vimrc"; ;;
+        esac
+        ;;
+esac

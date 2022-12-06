@@ -1,0 +1,6 @@
+#!/bin/sh
+. $HOME/.bin/_config
+
+ssh $USER@$DOMAIN "cd $RPATH/p && ls -tr1 | xargs file --mime-type" \
+    | awk -F'[ :]*' -v url="https://$DOMAIN" \
+    '{if ($2 ~ /^image/) { print url"/I/p/"$1 } else { print url"/0/p/"$1 }}'

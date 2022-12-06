@@ -1,0 +1,10 @@
+#!/bin/sh
+. $HOME/.bin/_config
+
+WID=$(wmctrl -l | col -b \
+        | grep -v "^$" \
+        | awk '{printf("%s",$1);$1="";$2="";$3=""; print $0}' \
+        | $DMENU_CMD -p "Windows" \
+            | awk '{ print $1 }' \
+     )
+[ -z "$WID" ] || wmctrl -i -a $WID

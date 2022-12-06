@@ -1,0 +1,60 @@
+#!/bin/sh
+. $HOME/.bin/_config
+
+showlist() {
+printf '%s\n' \
+"next
+prev
+play
+stop
+shuffle
+sort
+load tank
+load local
+---------
+> $(amused status | head -1 | sed 's,/tank/pub/Audio_/,,g')
+---------"
+
+amused show | cut -d'/' -f5-
+}
+
+SEL="$( showlist | $DMENU_CMD -p Playlist -l 30)"
+
+amused_shuffle() {(
+    twmnc -d 2000 -t "amused" -c "shuffle started in background";
+    amused show | sort -R | amused load;
+    twmnc -d 2000 -t "amused" -c "shuffle finished";
+)&}
+amused_sort() {(
+    twmnc -d 2000 -t "amused" -c "sorting started in background"
+    amused show | sort -u | amused load
+    twmnc -d 2000 -t "amused" -c "sorting finished"
+)&}
+amused_load_tank() {(
+    twmnc -d 2000 -t "amused" -c "loading started in background"
+    amused load < /home/sdk/.music.all.txt
+    twmnc -d 2000 -t "amused" -c "loading finished"
+)&}
+amused_load_local() {(
+    twmnc -d 2000 -t "amused" -c "loading started in background"
+    find ~/MusicSelection -type f | amused load
+    twmnc -d 2000 -t "amused" -c "loading finished"
+)&}
+amused_cmd() {
+    amused "${@}"
+    twmnc -d 5000 \
+          -t "amused $1" \
+          -c "$(amused status | head -1 | cut -d'/' -f5-)"
+}
+
+case "${SEL}" in
+    play) amused_cmd play; ;;
+    prev) amused_cmd pref; ;;
+    stop) amused_cmd stop; ;;
+    next) amused_cmd next; ;;
+    shuffle) amused_shuffle; ;;
+    sort) amused_sort; ;;
+    load*tank) amused_load_tank; ;;
+    load*local) amused_load_local; ;;
+    *) amused_cmd jump "${SEL}"; ;;
+esac

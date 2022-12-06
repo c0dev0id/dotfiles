@@ -1,0 +1,4 @@
+#!/bin/sh
+. $HOME/.bin/_config
+S=$(dmenu_path | $DMENU_CMD -p Exec)
+[ ! -z $S ] && sterm -e "$S"

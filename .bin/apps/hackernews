@@ -1,0 +1,3 @@
+#!/bin/sh
+. $HOME/.bin/_config
+texec "sacc codevoid.de/1/hn"

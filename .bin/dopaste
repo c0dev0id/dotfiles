@@ -1,0 +1,55 @@
+#!/bin/sh
+. $HOME/.bin/_config
+
+PSSH="${USER}@${DOMAIN}"
+LOC="p"
+
+f="$1"
+if [ "$1" = "-h" ]; then
+    printf "Usage:\n"
+    printf "  paste < text.txt         - read from stdin, generate filename\n"
+    printf "  paste new.txt < file.txt - read from stdin with filename\n"
+    printf "  paste file.txt           - upload file as is\n"
+    return 0
+fi
+if [ -z "$1" ]; then
+    f="$(date +"%Y-%m-%d_%M-%S")-$(pwgen -1 4 -A -0).txt"
+    ssh ${PSSH} "printf \"%s\" \"$(cat)\" > ${RPATH}/${LOC}/$f"
+
+elif [ -f "$f" ]; then
+    scp "$f" ${PSSH}:"${RPATH}/${LOC}/${f##*/}"
+else
+    ssh ${PSSH} "printf \"%s\n\" \"$(cat)\" > ${RPATH}/${LOC}/${f##*/}"
+
+fi
+
+SELECTOR="9"
+# if data comes from stdin
+if [ ! -t 0 ]; then
+    # it's always 0
+    SELECTOR="0"
+else
+    # if a parmeter is given and it's a file
+    if [ -f "$f" ]; then
+        # determine type and set selector
+        case "$(file --mime-type -b "$f")" in
+            image/*)         SELECTOR="I";;
+            text/*)          SELECTOR="0";;
+            message/*)       SELECTOR="0";;
+            */x-shellscript) SELECTOR="0";;
+            */pgp-keys)      SELECTOR="0";;
+        esac
+    else
+        # parameter given, but not a file, must be cat then...
+        SELECTOR=0
+    fi
+fi
+
+printf "https://${DOMAIN}/${SELECTOR}/${LOC}/${f##*/}\n"
+printf "https://${DOMAIN}/${SELECTOR}/${LOC}/${f##*/}" | xclip
+
+# write paste history (for convenience and rmpaste)
+printf "$(date +"%Y-%m-%d %M:%S")|$f\n" \
+    | ssh -q $PSSH "cat - >> $RPATH/${LOC}/.pastehistory"
+
+[ -z $DISPLAY ] || notify-send "$(xclip -o)"

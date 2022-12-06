@@ -1,0 +1,31 @@
+#!/bin/sh
+
+set -xe
+
+[ -f /usr/bin/doas ] || alias doas=sudo
+
+_input="$(echo "$1" | sed 's/:$//g')"
+_file="$(echo "$_input" | sed 's/:[0-9:]*$//g')"
+_fnr="$(echo "$_input" | awk -F: '{ print NF }')"
+
+[ ! -w $_file ] \
+    && _cmd="doas vim" \
+    || _cmd="vim"
+
+if [ $_fnr -eq 3 ]
+then
+    _row="$(echo "$_input" | awk -F: '{ print $2 }')"
+    _col="$(echo "$_input" | awk -F: '{ print $3 }')"
+    $_cmd -c ":call cursor($_row,$_col)" "$_file"
+
+elif [ $_fnr -eq 2 ]
+then
+    _row="$(echo "$_input" | awk -F: '{ print $2 }')"
+    $_cmd +$_row "$_file"
+
+else
+    echo "No cursor position found..."
+    $_cmd "$_file"
+fi
+
+exit 0

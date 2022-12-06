@@ -1,0 +1,27 @@
+#!/bin/sh
+. $HOME/.bin/_config
+
+PSSH="$USER@$DOMAIN"
+LOC="p"
+
+if [ "$1" = "-h" ]; then
+    printf "Usage:\n"
+    printf "    rmpaste            - deletes last paste based on ~/.pastehistory\n"
+    printf "    rmpaste <filename> - deletes paste with <filename>\n"
+    return 0
+fi
+if [ -z $1 ]; then
+    if ssh -q $PSSH "! [ -s $RPATH/$LOC/.pastehistory ];"; then
+        printf "The history file is empty.\n"
+        return 0
+    fi
+    f=$(ssh -q $PSSH "tail -1 $RPATH/$LOC/.pastehistory | cut -d'|' -f2")
+
+    read d?"Delete last paste? ($f) [y/N] : "
+    if [ "$d" = "y" ]; then
+        ssh $PSSH "rm $RPATH/$LOC/$f"
+        ssh -q $PSSH "sed -i '$ d' $RPATH/$LOC/.pastehistory"
+    fi
+else
+    ssh $PSSH "rm $RPATH/$LOC/$1"
+fi

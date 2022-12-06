@@ -1,0 +1,13 @@
+#!/bin/sh 
+. $HOME/.bin/_config
+
+CONF=$(cat $HOME/.ssh/config| grep -Ei "^host" | grep -v '*' | cut -d" " -f2)
+HOSTS=$(cat $HOME/.ssh/known_hosts | cut -d" " -f1 | tr ',' '\n')
+
+HOST=$(printf '%s\n%s' "$CONF" "$HOSTS" | grep -v '=' | sort -ru | $DMENU_CMD -p SSH)
+if [ ! -z "$HOST" ]; then
+    case "$HOST" in
+        *-sftp) texec "sftp $HOST"; ;;
+        *) texec "ssh $HOST"; ;;
+    esac
+fi

@@ -1,0 +1,4 @@
+#!/bin/sh 
+. $HOME/.bin/_config
+APP=$(ls -1 $HOME/.bin/apps/ | $DMENU_CMD -p App)
+[ ! -z "$APP" ]  && $HOME/.bin/apps/$APP

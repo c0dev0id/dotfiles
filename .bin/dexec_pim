@@ -1,0 +1,49 @@
+#!/bin/sh
+. $HOME/.bin/_config
+
+SEL=$(printf "Notes\nDocuments\nContacts\nSlides" | $DMENU_CMD -p "Information System")
+
+case $SEL in
+    Notes)
+        N=$(printf "Todo\nNotes\nEvents" | $DMENU_CMD -p Notes)
+        case $N in
+            Todo) hterm -e "vim scp://sdk@shell.codevoid.de/work/notes/todos.txt"; ;;
+            Notes) hterm -e "vim scp://sdk@shell.codevoid.de/work/notes/notes.txt" ;;
+            Events) hterm -e "vim scp://sdk@shell.codevoid.de/work/notes/events.txt" ;;
+        esac
+        ;;
+    Documents)
+        DOC=$(ls -1pr $PIMDIR/documents/ | grep -v '/$' | sort -hr | $DMENU_CMD -p Documents -l 25)
+        if [ ! -z "$DOC" ]; then
+            ACT=$(printf "View\nEdit\nEmail" | $DMENU_CMD -p Action)
+            case $ACT in
+                View) mupdf "$PIMDIR/documents/$DOC" ;;
+                Edit) pdfarranger "$PIMDIR/documents/$DOC" ;;
+                Email) texec "mutt -a \"$PIMDIR/documents/$DOC\"" ;;
+            esac
+        fi
+        ;;
+    Contacts)
+        C=$(contactsearch | $DMENU_CMD -p Contacts -l 25)
+        if [ ! -z "$C" ]; then
+            _file=$(printf "$C" | cut -d" " -f1)
+            if [ -f "$PIMDIR/contacts/$_file" ]; then
+                texec "vim \"$PIMDIR/contacts/$_file\""
+            else
+                printf "Name:\nAddress:\nHome:\nWork:\nMail:\nWeb:\nBirthday:\n" >> "$PIMDIR/contacts/$_file"
+                texec "vim \"$PIMDIR/contacts/$_file\""
+            fi
+        fi
+        ;;
+    Slides)
+        P=$(ls -1 "$PIMDIR/slides/" | sort -hr | $DMENU_CMD -p Slides -l 25)
+        if [ ! -z "$P" ]; then
+            ACT=$(printf "Open\nEdit" | $DMENU_CMD -p Action)
+                case $ACT in
+                    Open) sent "$PIMDIR/slides/$P" ;;
+                    Edit) texec "vim \"$PIMDIR/slides/$P\"" ;;
+                esac
+            fi
+        ;;
+esac
+

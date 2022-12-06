@@ -1,0 +1,3 @@
+#!/bin/sh
+. $HOME/.bin/_config
+texec "tmux new-session -A -s irrsi irssi"

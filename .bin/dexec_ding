@@ -1,0 +1,4 @@
+#!/bin/sh
+. $HOME/.bin/_config
+D="$(echo "$(xclip -o)" | $DMENU_CMD -p Translate)"
+[ ! -z "$D" ] && ding "$D"

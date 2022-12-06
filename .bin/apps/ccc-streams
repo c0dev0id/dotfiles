@@ -1,0 +1,20 @@
+#!/bin/sh
+
+# needs: jq, curl, ffplay, notify-send
+
+# https://codevoid.de/1/git/dotfiles/file/.bin/_config.gph
+. ~/.bin/_config
+PLAYER="ffplay -loglevel error"
+JSON="https://streaming.media.ccc.de/streams/v2.json"
+
+QUALITY="hd-native"
+FORMAT="webm"
+
+SLUG=$(curl -s "$JSON" | jq -crM '.[].groups[].rooms[].slug' | $DMENU_CMD -p Stream )
+if [ ! -z "$SLUG" ];
+then
+    URL=$(curl -s "$JSON" | jq -Mcr ".[].groups[].rooms[] | select(.slug==\"$SLUG\") | .streams[] | select(.slug==\"$QUALITY\").urls.$FORMAT.url")
+
+    ERR="$($PLAYER "$URL" 2>&1 > /dev/null)"
+    [ ! -z "$ERR" ] && notify-send "$ERR"
+fi
