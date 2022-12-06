@@ -40,13 +40,13 @@ NOTIFY_CMD="notify"
 #
 # DEVELOPMENT
 #
-DEVDIRPATH=/home/sdk/.dev
+DEVDIRPATH=${HOME}/.dev
 DEVDIR="$(cat "${DEVDIRPATH}/dir")"
 
 #
 # PIM
 #
-PIMDIR="/home/sdk/pim"
+PIMDIR="${HOME}/pim"
 
 #
 # REMOTE

@@ -1,6 +1,5 @@
 #!/bin/sh
 . ~/.bin/_config
-doas chown -R sdk ${DEVDIRPATH}
 set -xe
 
 # save dev bookmark
