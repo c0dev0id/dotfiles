@@ -1,0 +1,10 @@
+#sndiod_flags=-f rsnd/0 -F rsnd/1 -F rsnd/2 -F rsnd/3 -m play,rec -s default -m mon -s mon
+apmd_flags=-H -z 5
+httpd_flags=
+lpd_flags=
+multicast=YES
+pkg_scripts=messagebus vnstatd cupsd
+portmap_flags=
+sndiod_flags=-b960 -f rsnd/0 -F rsnd/1 -F rsnd/2 -F rsnd/3 -m play -s default
+unbound_flags=
+xenodm_flags=

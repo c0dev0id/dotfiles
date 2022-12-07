@@ -1,0 +1,27 @@
+# bioctl -c C -p /etc/keyfile -l 7233728656dc5031.a softraid0
+# mount /data
+
+
+if [ ! -f /usr/local/sbin/dhcp6c ]; then
+    logger "Wide DHCPv6: not installed"
+    exit
+fi
+
+if [ ! -f /etc/dhcp6c.conf ]; then
+    logger "Wide DHCPv6: dhcp6c.conf not found"
+    exit
+fi
+
+if [ ! -f /etc/hostname.trunk0 ]; then
+    logger "Wide DHCPv6: no trunk device found"
+    exit
+fi
+
+if [ ! -f /etc/dhcp6cctlkey ]; then
+    logger "Wide DHCPv6: generating dhcp6cctlkey"
+    /usr/bin/openssl rand -base64 48 > /etc/dhcp6cctlkey
+    chmod 600 /etc/dhcp6cctlkey
+fi
+
+logger "Starting Wide DHCPv6"
+/usr/local/sbin/dhcp6c -c /etc/dhcp6c.conf trunk0

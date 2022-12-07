@@ -1,0 +1,165 @@
+" VIM CORE
+set nocompatible                                                       " enable advanced features
+set autochdir                                                          " current dir is vim workdir
+set wildmenu                                                           " complete all filetypes
+set mouse=v                                                            " don't interract with the mouse
+set laststatus=2                                                       " always show the status line
+set keywordprg=":help"                                                 " show vim help when hitting "K"
+set backspace=indent,eol,start                                         " make backspace like in a normal editor
+set ttimeout                                                           " set timeout for key combinations to on
+set ttimeoutlen=50                                                     " set timeout for key combinations to 50ms
+set number                                                             " enable line numbers
+"set relativenumber                                                     " enable relative line numbers (slow)
+"set cursorline                                                         " highlight line number + line with cursor (slow)
+set lazyredraw
+set spelllang=de,en
+syntax enable                                                          " enable syntax plugin (builtin)
+filetype plugin indent on                                              " load indent and plugin based on filetype
+
+" INDENTATION
+set autoindent                                                         " start new lines on same indent level
+set smartindent                                                        " smart indentation for programming languages
+set breakindent                                                        " visually wrapped lines will respect the indent level
+set cindent                                                            " smart indentation for C programming
+set formatprg=par\ -B+.,\\-\\!\\?\\\"\\\'\\*\\<\ -w72qie
+
+" SEARCH
+set incsearch                                                          " search while typing
+set hlsearch                                                           " highlight all search matches
+set wrapscan                                                           " search continues on top
+set ignorecase                                                         " search case insensitive
+set smartcase                                                          " search case sensitive once a capital letter is used
+
+" SPACES (TABS)
+set tabstop=4                                                          " one tab counts X spaces (used by retab)
+set softtabstop=4
+set shiftwidth=4                                                       " number of spaces used to indent
+set expandtab                                                          " use spaces when hitting <tab>
+set smarttab                                                           " if the line starts with space, backspace will delete "shiftwidth"
+set textwidth=0
+
+set list
+set listchars=tab:>-
+let c_space_errors=1
+
+" FOLDING
+set foldmethod=indent                                                  " Fold at indent level
+set foldnestmax=3                                                      " Fold max 3 levels deep
+set foldlevel=1
+set foldlevelstart=10                                                  " Start to fold at level 0
+
+" TEMPORARY FILES
+set undofile                                                           " save undo history, so it can be restored after reopening a file
+set undodir=~/.vim/undo//                                              " save undo history here (don't clutter the filesystem)
+set backup                                                             " create backups
+set backupcopy=yes
+set backupdir=~/.vim/backup//                                          " save backup files here (don't clutter the filesystem)
+set backupskip=mutt-*                                                  " do not create backups of emails
+set directory=~/.vim/swapfiles//                                       " move swapfiles out of the way
+
+" LOOK N FEEL
+set t_Co=256                                                           " for terminal with 256 colors
+set background=dark                                                    " I prefer dark backgrounds
+highlight Normal ctermbg=NONE guibg=#181818                            " transparent background (terminal), sane color (gui)
+highlight SpellBad cterm=NONE ctermfg=darkred ctermbg=NONE             " make spellcheck work with cursorline (set fg color)
+
+highlight ColorColumn72 ctermfg=03
+call matchadd('ColorColumn72', '\%72v', 100)                                 " highlight column 78 in green
+match ErrorMsg '\(TODO\|FIXME\|OPTIMIZE\|BUG\|workaround\|WTF\)'             " highlight code comment keywords
+
+" VIMDIFF COLOR FIX
+highlight DiffAdd    cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
+highlight DiffDelete cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
+highlight DiffChange cterm=bold ctermfg=10 ctermbg=17 gui=none guifg=bg guibg=Red
+highlight DiffText   cterm=bold ctermfg=10 ctermbg=88 gui=none guifg=bg guibg=Red
+
+" CURSOR
+let &t_SI = "\e[6 q"                                                   " change cursor to ibeam in inser mode
+let &t_EI = "\e[2 q"                                                   " change cursort to block in normal mode
+
+" GRAPHICAL VIM / GVIM
+set guifont=Fira\ Code\ 13                                             " Use this font in gvim
+set guioptions=                                                        " don't show any gui elements
+
+" TAB NAVIGATION
+set tabpagemax=25                                                      " allowed max tabs (10)
+inoremap [5^ <Esc>:tabn<CR>                                          " Strg+PgUp: Next tab
+nnoremap [5^ :tabn<CR>
+inoremap [6^ <Esc>:tabp<CR>                                          " Strg+PgDown: Previous tab
+nnoremap [6^ :tabp<CR>
+inoremap  <Esc>:tabnew<CR>                                           " Strg+T: New tab
+nnoremap  :tabnew<CR>
+
+" SCREEN FIXES
+map  [7~ <Home>
+imap [7~ <Home>
+nmap [7~ <Home>
+
+map  [8~ <End>
+imap [8~ <End>
+nmap [8~ <End>
+
+map  [5~ <PageUp>
+imap [5~ <PageUp>
+nmap [5~ <PageUp>
+
+map  [6~ <PageDown>
+imap [6~ <PageDown>
+nmap [6~ <PageDown>
+
+" NETRW
+let g:netrw_banner       = 0                                           " disable annoying banner
+let g:netrw_browse_split = 4                                           " open in prior window
+let g:netrw_altv         = 1                                           " open splits to the right
+let g:netrw_liststyle    = 3                                           " tree view
+
+" TAGS FILE
+set tags=./tags;                                                       " Search for tags file backwards recursive
+nnoremap gt <c-]>                                                      " Jump to tag (go tag)
+nnoremap gb <c-o>                                                      " Jump to last position (go back)
+nmap gh :FSHere<CR>                                                    " Jump to corresponding header file (go header)
+
+" SUDO SAVE
+cmap w!! w !sudo tee > /dev/null
+
+" REMEMBER LAST CURSOR POSITION
+if has("autocmd")
+  au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$") | exe "normal! g'\"" | endif
+endif
+
+" OPEN HELP IN A NEW TAB
+command! -nargs=1 -complete=help H :tabnew | :set buftype=help | :h <args>
+
+" NAVIGATE ON VISUAL LINES (SOFT WRAP)
+imap <silent> <Down> <C-o>gj
+imap <silent> <Up> <C-o>gk
+nmap <silent> <Down> gj
+nmap <silent> <Up> gk
+
+" USE ARROW / VIM KEYS INSIDE OMNIBOX
+inoremap <expr> j pumvisible() ? '<C-n>' : 'j'
+inoremap <expr> k pumvisible() ? '<C-p>' : 'k'
+inoremap <expr> <Down> pumvisible() ? '<C-n>' : '<Down>'
+inoremap <expr> <Up> pumvisible() ? '<C-p>' : '<Up>'
+
+" AUTO BRACKET
+inoremap {<CR> {<CR>  <CR>}<up><right>
+
+" TREAT C FILES AS C, NOT C++
+augroup project
+    autocmd!
+    autocmd BufRead,BufNewFile *.h,*.c set filetype=c.doxygen
+augroup END
+
+function! Copy()
+    :'<,'>w! /tmp/vimcopy.txt
+endfunction
+
+function! Paste()
+    :r /tmp/vimcopy.txt
+endfunction
+
+au BufReadPost * if getfsize(bufname("%")) > 512*1024 | 
+    \ set syntax= |
+    \ set nonumber |
+    \ endif

@@ -1,0 +1,4 @@
+192.168.1.20:/tank/priv /tank/priv nfs rw,noatime,intr,nodev,nosuid,noexec,noauto 0 0
+192.168.1.20:/tank/pub /tank/pub  nfs rw,noatime,intr,nodev,nosuid,noexec,noauto 0 0
+192.168.1.20:/tank/scanner /tank/scanner  nfs rw,noatime,intr,nodev,nosuid,noexec,noauto 0 0
+192.168.1.20:/buffer /tank/buffer  nfs rw,noatime,intr,nodev,nosuid,noexec,noauto 0 0

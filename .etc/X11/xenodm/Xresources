@@ -1,0 +1,44 @@
+xlogin*login.translations: #override \
+	Ctrl<Key>R: abort-display()\n\
+	<Key>F1: set-session-argument(failsafe) finish-field()\n\
+	<Key>Left: move-backward-character()\n\
+	<Key>Right: move-forward-character()\n\
+	<Key>Home: move-to-begining()\n\
+	<Key>End: move-to-end()\n\
+	Ctrl<Key>KP_Enter: set-session-argument(failsafe) finish-field()\n\
+	<Key>KP_Enter: set-session-argument() finish-field()\n\
+	Ctrl<Key>Return: set-session-argument(failsafe) finish-field()\n\
+	<Key>Return: set-session-argument() finish-field()
+
+xlogin*greeting: Login
+xlogin.Login.sepWidth: 1
+xlogin*fail: Login incorrect or forbidden
+
+xlogin*greetFace:       Monospace-20:dpi=100
+xlogin*face:            Monospace-16:dpi=100
+xlogin*promptFace:      Monospace-16:dpi=100
+xlogin*failFace:        Monospace-16:dpi=100
+
+xlogin*borderWidth: 1
+xlogin*frameWidth: 2
+xlogin*innerFramesWidth: 0
+xlogin.Login.sepWidth: 0
+xlogin*hiColor: #181818
+xlogin*shdColor: #181818
+
+xlogin*background: #000000
+xlogin*inpColor: #181818
+xlogin*failColor: #aa0000
+xlogin.Login.echoPasswd: true
+xlogin.Login.namePrompt:  
+xlogin.Login.passwdPrompt: 
+
+xlogin*borderWidth: 3
+xlogin*frameWidth: 5
+xlogin*innerFramesWidth: 1
+
+*Foreground: #cccccc
+*Background: #000000
+xlogin*logoFileName: /etc/X11/xenodm/pixmaps/OpenBSD_15bpp.xpm
+xlogin*useShape: false
+xlogin*logoPadding: 10

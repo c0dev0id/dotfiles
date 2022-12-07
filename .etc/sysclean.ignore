@@ -1,0 +1,17 @@
+/tank
+/etc/X11/xorg.conf
+/etc/mail/secrets
+/opt
+/var/ccache
+/usr/share/terminfo/s/st-mono
+/usr/share/terminfo/s/st-meta
+/usr/share/terminfo/s/st-meta-256color
+/usr/share/terminfo/s/st-bs
+/usr/share/terminfo/s/st-bs-256color
+/usr/www
+/rbsd
+/run
+/build
+/data
+/usr/ports.git
+/var/spool/cups
