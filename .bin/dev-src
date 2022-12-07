@@ -1,0 +1,36 @@
+#!/bin/sh
+. ~/.bin/_config
+
+cd "${DEVDIR}"
+
+F=$(find * \
+    -not -path "*/CVS/*" \
+    -not -path "*/.git/*" \
+    -type f \
+    \(     -name "*.c" \
+        -o -name "*.cc" \
+        -o -name "*.cpp" \
+        -o -name "*.h" \
+        -o -name "*.hh" \
+        -o -name "*.hpp" \
+        -o -name "*.pl" \
+        -o -name "*.awk" \
+        -o -name "*.sh" \
+        -o -name "*.mk" \
+        -o -name "*.in" \
+        -o -name "*conf" \
+        -o -name "*devs" \
+        -o -name "Makefile" \
+        -o -name "PLIST*" \
+        -o -name "DESCR*" \
+        -o -name ".gitignore" \
+        -o -name ".cvsignore" \
+    \) | fzf \
+            --exact \
+            --no-sort \
+            --preview-window=right:65% \
+            --preview='highlight -O ansi -O xterm256 --force {}' \
+);
+
+test -z "$F" \
+    || vim "$F";
