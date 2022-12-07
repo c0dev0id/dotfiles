@@ -1,5 +1,10 @@
 #!/bin/sh
 
+if [ ! -z "$@" ]
+then
+    EXTRA="--query $@"
+fi
+
 F=$(find $HOME/.config/* \
          $HOME/.* \
             -maxdepth 1 \
@@ -15,6 +20,6 @@ F=$(find $HOME/.config/* \
                 -o -name ".ini" \
                 -o -name "config" \
             \) | sort -u \
-               | fzf -e +s --preview='cat {}' );
+               | fzf -e +s $EXTRA --preview='cat {}' );
 [ -z "$F" ] || vim "$F";
 
