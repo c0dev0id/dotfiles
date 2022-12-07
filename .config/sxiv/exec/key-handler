@@ -1,0 +1,78 @@
+#!/bin/sh
+# C-x + ?-?
+
+copy_to_clipboard() {
+    printf '%s\n' "Clipping $1"
+    printf '%s' "$(readlink -f "$1")" \
+        | xclip -selection clipboard
+}
+
+upload_to_paste() {
+    printf '%s\n' "Pasting $1"
+    scp "$1" sdk@codevoid.de:/home/www/htdocs/gopher/p/
+    printf '%s' "https://codevoid.de/I/p/${1##*/}" \
+        | xclip -selection clipboard
+}
+
+save_image() {
+    if [ -z "$SXIVDIR" ]
+    then
+        . $HOME/.bin/_config
+        SXIVDIR="$(find . -type d -maxdepth 1 | dmenu -p "Save" $DMENUOPTS)"
+        export SXIVDIR;
+    fi
+    printf '%s\n' "Saving $1 to $SXIVDIR/"
+    mkdir -p "$SXIVDIR"
+    mv "$1" "$SXIVDIR/"
+
+    base="${1%.*}"
+    for type in cr2 CR2 orf ORF dng DNG tif TIF xmp XMP
+    do
+        test -f "${base}.${type}" && mv "${base}.${type}" "$SXIVDIR/"
+    done
+}
+
+edit_image() {
+    base=${1%.*}
+    for type in cr2 CR2 orf ORF dng DNG
+    do
+        printf "Trying %s.%s\n" "${base}" "${type}"
+        if [ -f "${base}.${type}" ]
+        then
+            rawtherapee "${base}.${type}"
+            break
+        fi
+    done
+    for type in tif TIF
+    do
+        printf "Trying %s.%s\n" "${base}" "${type}"
+        if [ -f "${base}.${type}" ]
+        then
+            gimp "${base}.${type}"
+            break
+        fi
+    done
+}
+
+rotate_cw() {
+    printf '%s\n' "Rotating CW"
+    convert -rotate 90 "$1" "$1"
+}
+
+rotate_ccw() {
+    printf '%s\n' "Rotating CCW"
+    convert -rotate 270 "$1" "$1"
+}
+
+while read file
+do
+    case "$1" in
+        "d")      edit_image "$file" ;;
+        "c")      copy_to_clipboard "$file" ;;
+        "p")      printf '%s\n' "$(readlink -f "$file")" ;;
+        "u")      upload_to_paste "$file" ;;
+        "x")      save_image "$file" ;;
+        "Right")  rotate_cw "$file" ;;
+        "Left")   rotate_ccw "$file" ;;
+    esac
+done
