@@ -72,13 +72,14 @@ export EDITOR VISUAL BROWSER TUIR_BROWSER PAGER
 ### NNN
 NNN_OPTS="cErxAJ"
 NNN_OPENER="nnn.sh"
+NNN_FIFO=/tmp/nnn.fifo
 NNN_PLUG='o:-!mpv "$nnn";x:-!sh -x "$nnn";i:imgview;p:-!pdfarranger "$nnn" > /dev/null 2>&1 &'
 NNN_ARCHIVE="\\.(7z|bz2|gz|tar|tgz|zip)$"
 NNN_SSHFS='doas sshfs -d -o reconnect -o uid=1000 -o gid=1000'
 NNN_COLORS='#0a1b2c3d;1234'
 NNN_FCOLORS='c1e2272e006033f7c6d6abc4'
 export NNN_OPTS NNN_OPENER NNN_PLUG NNN_ARCHIVE NNN_SSHFS
-export NNN_COLORS NNN_FCOLORS
+export NNN_COLORS NNN_FCOLORS NNN_FIFO
 
 # LESS
 LESS="--buffers=-1 -g -i -J -M --tilde -R"
