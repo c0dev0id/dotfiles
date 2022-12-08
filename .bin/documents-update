@@ -1,0 +1,9 @@
+#/bin/sh -xe
+. ${HOME}/.bin/_config
+
+cd ${PIMDIR}
+git add *
+git commit -am "Update $(date +"%Y-%m-%d %H:%M")"
+git fetch
+git rebase origin/main
+git push
