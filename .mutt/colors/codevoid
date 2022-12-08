@@ -1,0 +1,89 @@
+# Programcolors (fg/bg)
+
+# INDEX
+color indicator  color208     default
+color status     color242     default
+color tree       color242     default
+color markers    color242     default
+color error      color196     default
+color normal     white        default
+
+# PAGER
+color hdrdefault color242     default
+color signature  color242     default
+color attachment color242     default
+
+color quoted     magenta      default
+color quoted1    cyan         default
+color quoted2    brightblue   default
+color quoted3    yellow       default
+color quoted4    magenta      default
+color quoted5    cyan         default
+color quoted6    brightblue   default
+color quoted7    yellow       default
+
+#color header     white         default ^From:
+#color header     white         default ^To:
+#color header     white         default ^Subject:
+color body       red           default "^\-"
+color body       red           default "^\-.*"
+color body       red           default "> \-.*"
+color body       green         default "^\\+"
+color body       green         default "^\\+.*"
+color body       green         default "> \\+.*"
+
+#color tilde      red        default
+#color message    red        default # info messages
+#color search     red    red   # search matches
+#color underline  red    default # hilighting underlined
+#
+## Headercolors
+#color header     red       default ^From:
+#color header     red       default ^Cc:
+#color header     red default ^X
+#color header     red        default ^Subject:
+#color header     red         default ^Organization:
+#color header     red         default ^Reply
+#color header     red       default ^From
+#color header     red   default ^X-Mailer:
+#color header     red       default ^To:
+#color header     red default ^X-Mailing-List:
+#color header     red default ^OpenPGP:
+#color header     red default ^OpenGPG:
+#color header     red default ^X-OpenGPG:
+#color header     red          default ^Date:
+#color header     red default ^User-Agent:
+#color header     red default ^List-Id:
+#color header     red default ^Sender:
+#color header     red default ^X-PGP-Fingerprint:
+#
+
+## Smilies etc.
+##color body       red          default "<[Gg]>"
+##color body       red          default "<[Bb][Gg]>"
+##color body       red          default " [;:]-*[)>(<|]"
+#
+## Emails
+#color body       red    default "[-a-z_0-9.%$]+@[-a-z_0-9.]+\\.[-a-z][-a-z]+"
+#
+## URLs
+#color body       red  default "(https|http|ftp|news|telnet|finger|gopher)://[^ ]*"
+#color body       red  default "mailto:[-a-z_0-9.\+]+@[-a-z_0-9.]+"
+#
+## Message types
+#color index     red   default '~P' # from me
+##color index      red          default '~p' # personal
+#color index      red         default '~G' # PGP
+#color index      red           default '~F' # flagged
+##color index      red        default '~Q' # replied
+##color index      red  default '~N' # new
+##color index      red          default '~D' # deleted
+
+
+color index color8 default  '~f "foxy@free.fr"'
+color index color8 default  '~f "solene@perso.pw"'
+color index color8 default  '~f "jca@wxcvbn.org"'
+color index color8 default  '~f "@afresh1.com"'
+color index color8 default  '~f "@openbsd.org"'
+color index color8 default  '~f "@cvs.openbsd.org"'
+color index color6 default  '~f ".*openbsd.*@codevoid.de"'
