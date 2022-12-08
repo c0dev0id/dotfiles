@@ -27,7 +27,7 @@ static int cpu_avg_speed = 23;
 static int volume = 23;
 
 
- void update_volume(void *arg, unsigned addr, unsigned val) {
+ //void update_volume(void *arg, unsigned addr, unsigned val) {
 //     printf("volume update\n");
 // 
 // }

@@ -38,5 +38,6 @@ openbsd_laptop() {
 case $(hostname) in
     ld*) linux_server; ;;
     *.home.codevoid.de) openbsd_laptop; ;;
+    *.local.codevoid.de) openbsd_laptop; ;;
 esac
 
