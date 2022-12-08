@@ -1,0 +1,42 @@
+source ~/.mutt/rc-common
+
+set from="sh@codevoid.de"
+set realname="Stefan Hagen"
+
+unmy_hdr *
+my_hdr Precedence: first-class
+my_hdr Priority: normal
+my_hdr X-Editor: `vim --version | head -1 | tr 'IM' 'im' | awk '{print $1" "$5 }'`
+my_hdr X-Operating-System: `uname -rms`
+my_hdr X-Mailer: `mutt -v | head -1`
+my_hdr X-PGP-Fingerprint: CBD3 C468 64B4 6517 E8FB B90F B6BC 2EC5 52BE 43BA
+my_hdr OpenPGP: id=52BE43BA\; url=https://codevoid.de/0/gpg\; preference=signencrypt
+
+set text_flowed = no
+set indent_string = "> "
+
+set imap_delim_chars='/'
+set spoolfile           = imaps://mail.codevoid.de/INBOX
+set folder              = imaps://mail.codevoid.de
+set postponed           = imaps://mail.codevoid.de/Drafts
+set record              = imaps://mail.codevoid.de/Sent
+set trash               = imaps://mail.codevoid.de/Trash
+set realname            = "Stefan Hagen"
+
+source "pass Local/mutt-private |"
+
+set signature = "$HOME/.mutt/signature"
+set sendmail  = "msmtp -a private"
+
+set ssl_starttls  = yes
+set ssl_force_tls = yes
+set mail_check    = 120
+set timeout       = 15
+
+macro index <f5>  "<change-folder> =INBOX<enter>" "INBOX"
+macro index <f6>  "<change-folder> =Mailboxes/codevoid.de/sh+openbsd-ports<enter><last-entry>" "ports"
+macro index <f7>  "<change-folder> =Mailboxes/codevoid.de/sh+openbsd-tech<enter><last-entry>" "tech"
+macro index <f8>  "<change-folder> =Mailboxes/codevoid.de/sh+openbsd-hackers<enter><last-entry>" "hackers"
+macro index <f9>  "<change-folder> =Mailboxes/codevoid.de/sh+openbsd-ports-cvs<enter><last-entry>" "ports-cvs"
+
+mailboxes -nopoll -label Codevoid "imaps://mail.codevoid.de"

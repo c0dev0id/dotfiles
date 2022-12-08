@@ -1,0 +1,319 @@
+# CACHE
+set mailcap_path                = "$HOME/.mutt/mailcap"
+set header_cache                = "$HOME/.mutt/cache/"
+set message_cachedir            = "$HOME/.mutt/cache/"
+set header_cache_compress       = yes # faster without
+set message_cache_clean         = yes # delete obsolete entries from cache (for outside changes)
+set maildir_header_cache_verify = yes # check for changes from outside mutt
+set maildir_check_cur           = yes # check curr folder for new messages
+set mail_check_stats            = yes # calculate message statistics
+set mail_check_stats_interval   = 60  # stat calculation interval
+
+# set xterm title
+set ts_enabled = no
+
+# IMAP FEATURES
+set imap_condstore        = yes
+set imap_qresync          = yes
+set imap_deflate          = yes
+set imap_idle             = no
+set imap_keepalive        = 180
+set imap_fetch_chunk_size = 250
+set imap_pipeline_depth   = 0
+set imap_poll_timeout     = 30
+set imap_check_subscribed = no
+set imap_passive          = yes
+set mail_check            = 360
+set timeout               = 5
+
+set tmpdir                = ~/.cache/mutt
+
+alternates @codevoid.de|@textmail.me|@stefanhagen-fotografie.de|ptrace.org|sh@uugrn.org|stefan.hagen@uugrn.org|sdk@uugrn.org|sdk@openbsd.org
+
+# Allow alt key
+set meta_key        = no
+
+# Charset Settings
+set charset         = "utf-8" # terminal
+set send_charset    = "us-ascii:utf-8"
+set config_charset  = "utf-8"
+set attach_charset  = "utf-8" # attachment view
+set assumed_charset = "utf-8"
+set use_8bitmime    = no      # only for weird sendmails
+set allow_ansi      = no      # no escape characters please
+set allow_8bit      = yes
+
+unlists *
+lists misc ports tech hackers uugrn intern vorstand
+
+# Display Header
+ignore    *
+unignore To Cc Subject Reply-To Mail-Followup-To Message-ID
+#unignore  From To Cc Subject Reply-To
+#unignore  Date Sender List-Unsubscribe
+#unignore  Message-ID
+unignore  X-Editor X-Mailer X-GPG X-PGP
+unignore  X-Gnupg PGP GPG Gnupg
+unignore  X-Spam:
+
+set imap_headers = "X-Spam X-Spam-DNSBL X-Label"
+spam "X-Spam: Yes"  "spam"
+
+hdr_order Date From To Cc Subject Reply-To
+hdr_order Sender List-Unsubscribe
+hdr_order X-Editor X-Mailer X-GPG X-PGP
+hdr_order X-Gnupg PGP GPG Gnupg
+
+#set text_flowed
+set sleep_time = 0
+
+set attribution = "%n wrote (%D):"
+
+# TOFU filter
+# set my_tprot='t-prot -aelmtS -c --bigq -Mmutt --spass --pgp-move --pgp-short'
+# set display_filter=$my_tprot
+set display_filter=~/.mutt/scripts/display-filter
+
+subscribe ports@openbsd.org
+send-hook '~C ^ports@openbsd\.org$' 'my_hdr From: sh+openbsd-ports@codevoid.de'
+send-hook '~C ^ports@openbsd\.org$' 'unset signature'
+
+subscribe misc@openbsd.org
+send-hook '~C ^misc@openbsd\.org$' 'my_hdr From: sh+openbsd-misc@codevoid.de'
+send-hook '~C ^misc@openbsd\.org$' 'unset signature'
+
+subscribe tech@openbsd.org
+send-hook '~C ^tech@openbsd\.org$' 'my_hdr From: sh+openbsd-tech@codevoid.de'
+send-hook '~C ^tech@openbsd\.org$' 'unset signature'
+
+subscribe hackers@openbsd.org
+send-hook '~C ^hackers@openbsd\.org$' 'my_hdr From: sh+openbsd-hackers@codevoid.de'
+send-hook '~C ^hackers@openbsd\.org$' 'unset signature'
+
+subscribe uugrn@uugrn.org
+send-hook '~C ^uugrn@uugrn\.org$' 'my_hdr From: sh@uugrn.org'
+send-hook '~C ^uugrn@uugrn\.org$' 'unset signature'
+
+subscribe vorstand@uugrn.org
+send-hook '~C ^vorstand@uugrn\.org$' 'my_hdr From: sh@uugrn.org'
+send-hook '~C ^vorstand@uugrn\.org$' 'unset signature'
+
+subscribe mutt-users@mutt.org
+send-hook '~C ^mutt-users@mutt\.org$' 'my_hdr From: sh+mutt-users@codevoid.de'
+send-hook '~C ^mutt-users@mutt\.org$' 'unset signature'
+
+subscribe intern@lists.ccc.de
+send-hook '~C ^intern@lists.ccc\.de$' 'my_hdr From: Stefan Hagen <ccc-intern@textmail.me>'
+send-hook '~C ^intern@lists.ccc\.de$' 'unset signature'
+
+# account hooks
+send2-hook '~f ^.*@uugrn.org'   'set sendmail = "msmtp -a uugrn"'
+send2-hook '~f ^.*@codevoid.de' 'set sendmail = "msmtp -a private"'
+send2-hook '~f ^.*@textmail.me' 'set sendmail = "msmtp -a private"'
+send2-hook '~f ^.*@ptrace.org'  'set sendmail = "msmtp -a private"'
+send2-hook '~f ^.*@codevoid.de' 'set sendmail = "msmtp -a private"'
+send2-hook '~f ^.*@mailbox.org' 'set sendmail = "msmtp -a mboxorg"'
+send2-hook '~f ^.*@mailbox.org' 'set sendmail = "msmtp -a mboxorg"'
+
+set help = no
+
+# Complete address via <tab> 
+set   use_from          = yes
+set   use_envelope_from = yes
+set   query_command     = "mu cfind --format=mutt-ab '%s'"
+macro index S           "<shell-escape>~/.mutt/scripts/mu-find.sh<enter><change-folder-readonly>~/.cache/mu/results<enter>" "mu search"
+bind  editor            <Tab> complete-query
+bind  editor            ^T complete
+
+# Format
+set pager_format    = "From: %f %* %d %P"
+set date_format     = "%Y-%m-%d %H:%M %Z"
+set index_format    = "%Z : %-18.18F : %s %* \ %?y?[%y] ?%[%H:%M %d.%m.%y]"
+set forward_format  = "Fw: %s"
+set attach_format   = "%u%D%I %t%4n %6T Size: %s, Type: %m/%M %d %F %> [ %C %e ] "
+set folder_format   = "%t %2C %d %f %> %s Bytes "
+set status_format   = '%f All:%m New:%u Mark:%t Del:%d %?V?Limit:%V/%ML? %> %P%'
+
+# Composing
+set   editor               = "vim -c 'set syntax=mail ft=mail'" # set mail editor
+set   print_command        = "muttprint"
+#set   editor 			   = "nvi"
+set   fast_reply           = yes     # do not ask for subject etc.
+set   autoedit             = no      # go directly to the editor. send_to has to be entered to hdr directly
+set   askcc                = no      # do not ask for cc address
+set   askbcc               = no      # do not ask for cc address
+set   reply_self           = yes     # strip own address from reply addresses
+set   ignore_list_reply_to = no      # ignore reply_to set by mailing lists (use the list-reply then)
+set   bounce_delivered     = no      # include Delivered-To headers when bouncing messages
+set   reverse_name         = yes     # use the recieving address as From address
+set   edit_headers         = yes     # show headers in editor
+set   header               = no      # insert header into reply text
+
+# Sending
+set   mime_forward         = ask-no  # forward as mime or text?
+set   reply_to             = ask-yes # Reply to reply-to?
+set   include              = yes     # include message in replies
+set   fcc_clear            = yes     # save message unencrypted. (security issue!)
+set   hidden_host          = no      # skip the first part of $hostname (does not affect msg ids)
+set   save_address         = no      # take senders full name as default for saving the message
+set   save_empty           = yes     # delete mbox if empty (does not work with maildir/imap etc)
+set   save_name            = no      # mutt searches for a mailbox with the senders name and saves the mail there instead of record.
+set   encode_from          = yes     # quoted-printable if line contains "From ". Avoids address trash
+set   quote_regexp         = '^([ \t]*[|>}])+'
+set   forward_decode       = yes     # decode complex mails to text/plain when forwarding
+set   forward_decrypt      = yes     # strip pgp
+set   forward_quote        = no      # format forwarded message text like a reply, with quote string etc.
+set   followup_to          = yes     # generates follow up header if replying to a list
+set   honor_followup_to    = yes     # take Mail-Followup-To header into account, whean group-replying
+
+# File stuff
+set   mask                 = "."     # show also dotfiles in file browser
+set   move                 = no      # do not move mail from spool to mbox
+set   copy                 = yes     # copy the sent messages to $record etc.
+set   fcc_attach           = yes     # save attachments in $record etc.
+
+# Layout
+set   pager_index_lines    = 0       # show a few lines from index above msg
+set   pager_stop           = yes     # pgdown does not wrap to next message
+set   markers              = no      # Don't add "+" on wrapped lines (hard to copy)
+set   smart_wrap           = yes     # wrap entire words
+set   sort                 = threads # sorting the mails in threads
+set   duplicate_threads    = yes     # groups messages with identical message id
+set   sort_aux             = last-date-received # sorting the threads
+set   abort_nosubject      = yes     # abort if message has no subject
+set   reverse_alias        = yes     # use username in index instead of email address (if available)
+set   status_on_top        = yes      # moves the bottom statusbar to the top
+set   mark_old             = no      # mark old unread messages with an o
+set   arrow_cursor         = no      # use arrow curser instead of a colored line
+set   tilde                = no     # show ~ if mail ends and theres still space on the screen
+set   menu_scroll          = yes     # scroll the screen instead of using pages
+set   sig_dashes           = no      # set signature dashes "-- "
+set   sig_on_top           = no
+set   ascii_chars          = no      # allow only ASCII chars for UI building
+
+# Thread handling
+set   strict_threads       = yes     # thread only by In-Reply-To/References or by Subject.
+set   sort_re              = no      # use subject for thread building
+set   collapse_unread      = no      # do not hide unread messages in compressed threads
+set   uncollapse_jump      = no      # jump to the first unread message after expanding a thread
+
+# Attachments
+set   implicit_autoview    = yes      # discover viewing app via mailcap entry
+set   attach_split         = yes     # process attachments one by one. this is for saving, printing, piping.
+set   mailcap_sanitize     = yes     # !DO NOT CHANGE! it checks mailcap for bad characters
+
+unalternative_order *
+alternative_order text/plain text/enriched text/html
+auto_view text/html text/enriched text/calendar
+
+# Preview HTML
+macro pager  "<pipe-message>cat - > /tmp/mutt.html && luakit /tmp/mutt.html<return>"
+
+#macro pager  "<pipe-message>~/.mutt/scripts/search-msgid.sh<enter>"
+
+macro pager,attach  "<pipe-message>cat > /tmp/muttpatch.diff<enter><shell-escape>~/.mutt/scripts/portpatch2.sh /tmp/muttpatch.diff<enter>"
+
+# Save Patch
+#macro pager  "<shell-escape>rm -f /tmp/mutt-patch.diff<enter><copy-message>/tmp/mutt-patch.diff<enter><enter-command>echo 'Saved as /tmp/mutt-patch.diff'<enter><shell-escape>~/.mutt/scripts/portpatch.sh /tmp/mutt-patch.diff<enter>"
+
+# pipe-message
+set   pipe_decode_weed = no
+set   pipe_decode  = yes # when piping via pipe-message command, strip headers and decode
+set   pipe_split   = yes # if several msgs are tagged, do the pipe-message command for each
+set   prompt_after = no  # promt if external pager exits
+set   wait_key     = no  # wait for a key-press after performing shell/external commands
+set   beep_new     = no  # beep if new message arrives
+set   check_new    = no  # check for new mails, while the mailbox is open
+set   auto_tag     = yes # function will applied to all tagged messages in the index
+set   use_domain   = no  # do not autoqualify messages without hostname
+set   read_only    = no  # open folders in read-only mode
+set   score        = no  # use the scoring system
+set   suspend      = no  # allow mutt to be suspended
+set   wrap_search  = yes # search the mailbox around
+
+# push V                  # show version at startup
+push *                  # go to last entry
+
+# save to folder
+macro index s "<save-message>?<toggle-mailboxes>" "move a message to a mailbox"
+macro pager s "<save-message>?<toggle-mailboxes>" "move a message to a mailbox"
+
+bind  index       x    sync-mailbox
+
+# POS1 and END navigation
+bind  index,browser    home first-entry
+bind  index,browser    end  last-entry
+bind  pager       <home> top
+bind  pager       <end>  bottom
+
+bind  pager       k    previous-line
+bind  pager       j    next-line
+
+# general navigation
+bind  index,pager up   previous-entry
+bind  index,pager down next-entry
+bind  browser up       previous-line
+bind  browser down     next-line
+bind  index,pager d    delete-message
+bind  index,pager u    undelete-message
+
+bind  index,pager G    group-chat-reply
+
+bind  browser     d    delete-mailbox
+bind  browser     q    exit
+
+# Index keys
+bind  index       Q    quit
+bind  index       q    noop
+bind  index       c    change-folder
+bind  index       v    display-message
+bind  index       ' '  next-page
+bind  index,pager y    edit-label
+bind  index       e    edit
+bind  index       $    sort-mailbox
+bind  index       a    tag-prefix
+macro index       M    "<tag-pattern>~N<enter><tag-prefix><clear-flag>N<untag-pattern>.<enter>" "Mark all new as read"
+macro index       I    "<limit>!~x.~$<enter>"
+
+# Pager keys
+bind  pager       ' '  next-page
+bind  pager       c    mail
+bind  pager       /    search
+bind  pager       \n   noop
+bind  pager       g    group-reply
+bind  pager       h    display-toggle-weed
+
+# Compose keys
+bind  compose     \cx  send-message
+bind  pager,index ,S   save-message
+
+# urlview
+macro pager       \cb  "<pipe-entry>'urlview'<enter>" 'Follow links with urlview'
+
+# TOFU settings
+# macro pager     T ":unset display_filter<enter><exit><display-message>:set display_filter='$my_tprot'<enter>" 'TOFU protection'
+
+# TOFU colors
+color body      brightmagenta   black   "^\\[---.*"
+color body      green           black   "^#v[-+]"
+
+# SSL Settings
+set ssl_verify_host    = no
+
+# GPG Settings (new style crypto - does not support inline gpg)
+set crypt_use_gpgme    = yes # use the new gpgme method (disabling cumbersome gpg commands below)
+set crypt_replyencrypt = yes # encrypt, if original mail was encrypted
+set crypt_replysign    = yes # sign, if original mail was signed
+set crypt_verify_sig   = no  # verify sig, if sig is available
+set crypt_autosign     = no  # sign mails per default
+set crypt_use_pka      = yes # http://www.g10code.de/docs/pka-intro.de.pdf
+set crypt_autosmime    = no
+set crypt_protected_headers_save = yes
+set crypt_protected_headers_write = yes
+set crypt_protected_headers_subject = "..."
+set crypt_opportunistic_encrypt = yes # encrypt when key can be found
+set autocrypt          = no
+set pgp_use_gpg_agent  = yes
+
+source ~/.mutt/colors/codevoid
+source ~/.mutt/colors/devcolors

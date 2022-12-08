@@ -1,0 +1,3 @@
+mailboxes \
+    "imaps://mail.codevoid.de" \
+    "~/.emails"

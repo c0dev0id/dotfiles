@@ -1,0 +1,65 @@
+# Programcolors (fg/bg)
+color attachment green        default
+color tree       cyan         default
+color error      cyan         default
+color normal     white        default
+color indicator  white        color15
+color signature  cyan         default
+color status     white        brightyellow
+color tilde      green        default
+color message    cyan         default # info messages
+color search     brightred    green   # search matches
+color markers    red          default # + at beginning of
+color underline  brightred    default # hilighting underlined
+
+# Headercolors
+color hdrdefault green        default
+color header     yellow       default ^From:
+color header     yellow       default ^Cc:
+color header     brightyellow default ^X
+color header     green        default ^Subject:
+color header     blue         default ^Organization:
+color header     blue         default ^Reply
+color header     yellow       default ^From
+color header     brightcyan   default ^X-Mailer:
+color header     yellow       default ^To:
+color header     brightyellow default ^X-Mailing-List:
+color header     brightyellow default ^OpenPGP:
+color header     brightyellow default ^OpenGPG:
+color header     brightyellow default ^X-OpenGPG:
+color header     red          default ^Date:
+color header     brightyellow default ^User-Agent:
+color header     brightyellow default ^List-Id:
+color header     brightyellow default ^Sender:
+color header     brightyellow default ^X-PGP-Fingerprint:
+
+# Quoting levels
+color quoted     green        default
+color quoted1    cyan         default
+color quoted2    brightblue   default
+color quoted3    yellow       default
+color quoted4    green        default
+color quoted5    cyan         default
+color quoted6    brightblue   default
+color quoted7    yellow       default
+
+# Smilies etc.
+#color body       red          default "<[Gg]>"
+#color body       red          default "<[Bb][Gg]>"
+#color body       red          default " [;:]-*[)>(<|]"
+
+# Emails
+color body       brightred    default "[-a-z_0-9.%$]+@[-a-z_0-9.]+\\.[-a-z][-a-z]+"
+
+# URLs
+color body       green  default "(https|http|ftp|news|telnet|finger|gopher)://[^ ]*"
+color body       green  default "mailto:[-a-z_0-9.\+]+@[-a-z_0-9.]+"
+
+# Message types
+color index     brightyellow   default '~P' # from me
+#color index      cyan          default '~p' # personal
+color index      green         default '~G' # PGP
+color index      red           default '~F' # flagged
+#color index      green        default '~Q' # replied
+#color index      brightwhite  default '~N' # new
+#color index      red          default '~D' # deleted

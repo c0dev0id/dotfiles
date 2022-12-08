@@ -1,0 +1,52 @@
+# USAGE: <type> <command> <flags>
+# Tyle: text/plain
+# Command: cmd %s
+# Flags:
+#   - copiousoutput         use pager
+#   - needsterminal         open in new terminal
+#   - text=xxx              rule is valid if program xxx returns true
+#   - textualnewlines=0     turn off newline conversation for text
+#   - compose=xxx %s        use program xxx to compose this type
+#   - edit=xxx              use program xxx to edit this type
+#   - description=xxx       set description
+#   - nametemplate=%s.html  define temporary file name
+# Format:
+#   - %s      - Filename (if %s is not used, data will be sent to stdin)
+#   - %t      - Mime Type
+#   - %{var1} - Specified by: var1=foobar;
+#
+# Env Variables:
+#   METAMAIL_PAGER=less
+#
+# Tests:
+#   test -n "$DISPLAY"      true when X is running
+
+
+# html
+text/html; w3m -I %{charset} -T %t -cols "$COLUMNS" -s -no-graph -o display_link=1 -o display_link_number=1; copiousoutput;
+
+# documents
+application/pdf; zathura %s; nametemplate=%s.pdf;
+application/vnd.openxmlformats-officedocument.wordprocessingml.document; libreoffice %s;
+application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; libreoffice %s;
+application/vnd.openxmlformats-officedocument.presentationml.presentation; libreoffice %s;
+application/vnd.oasis.opendocument.text; libreoffice %s;
+application/vnd.oasis.opendocument.spreadsheet; libreoffice %s;
+application/vnd.oasis.opendocument.presentation; libreoffice %s;
+
+# media
+image/*; nsxiv %s; needsterminal;
+video/*; mpv %s; needsterminal;
+audio/*; mpv %s; needsterminal;
+application/ogg; mpv %s; needsterminal;
+
+# calendar
+text/calendar; clear && ~/.mutt/scripts/mutt-ical.py -i -e "stefan.hagen@sap.com" %s; nametemplate=%s.ics
+application/ics; clear && ~/.mutt/scripts/mutt-ical.py -i -e "stefan.hagen@sap.com" %s; nametemplate=%s.ics
+ 
+# winmail.dat fix
+application/ms-tnef; tnef -w %s
+
+# fallback
+application/*; vim %s; needsterminal;
+#text/*; cat %s; copiousoutput;

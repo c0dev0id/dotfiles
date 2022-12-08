@@ -1,0 +1,8 @@
+#!/bin/sh
+
+cat - \
+    | sed 's|\[--\(.*unsupported.*\)--\]$|## Attachment:\1|g' \
+    | egrep -v '\[-- Attachment #1 --\]$' \
+    | egrep -v '\[-- Type.* --\]$' \
+    | fgrep -v "WARNING: We have NO indication" \
+    | cat -s
