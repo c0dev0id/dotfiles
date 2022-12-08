@@ -1,5 +1,5 @@
 execute pathogen#infect()
-Helptags
+" Helptags
 
 " VIM CORE
 set nocompatible

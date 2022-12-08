@@ -46,7 +46,7 @@ DEVDIR="$(cat "${DEVDIRPATH}/dir")"
 #
 # PIM
 #
-PIMDIR="${HOME}/pim"
+PIMDIR="${HOME}/Documents"
 
 #
 # REMOTE
