@@ -4,6 +4,13 @@
 cd ${PIMDIR}/documents
 
 _doc=$(ls -1 _incoming | head -1)
+
+if [ -z "$_doc" ]
+then
+    echo "Nothing left... wohooo!"
+    exit 0
+fi
+
 pdfarranger "_incoming/${_doc}" > /dev/null 2>&1 &
 echo "Here is: ${_doc}"
 echo "Shall we move it to _done?"
