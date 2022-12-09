@@ -1,0 +1,17 @@
+#/bin/sh -xe
+. ${HOME}/.bin/_config
+
+cd ${PIMDIR}/documents
+
+_doc=$(ls -1 _incoming | head -1)
+pdfarranger "_incoming/${_doc}" > /dev/null 2>&1 &
+echo "Here is: ${_doc}"
+echo "Shall we move it to _done?"
+read key
+
+case $key in
+    [yY]) mv "_incoming/${_doc}" done/; ;;
+    *) echo "What a shame..."; ;;
+esac
+
+pkill -f /usr/local/bin/pdfarranger

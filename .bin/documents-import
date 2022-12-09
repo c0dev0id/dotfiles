@@ -1,0 +1,5 @@
+#/bin/sh -xe
+. ${HOME}/.bin/_config
+
+mkdir -p ${PIMDIR}/documents/_incoming
+mv -f /tank/scanner/*.pdf ${PIMDIR}/documents/_incoming/
