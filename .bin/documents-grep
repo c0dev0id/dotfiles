@@ -1,0 +1,5 @@
+#/bin/sh -xe
+. ${HOME}/.bin/_config
+
+cd ${PIMDIR}/documents
+pdfgrep --cache -H "${*}" *.pdf
