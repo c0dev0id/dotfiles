@@ -18,6 +18,7 @@ read key
 
 case $key in
     [yY]) mv "_incoming/${_doc}" done/; ;;
+    [yY][nN]) mv "_incoming/${_doc}" done/; $0; ;;
     *) echo "What a shame..."; ;;
 esac
 
