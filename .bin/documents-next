@@ -11,16 +11,18 @@ then
     exit 0
 fi
 
-pkill -f /usr/local/bin/pdfarranger
-
 pdfarranger "_incoming/${_doc}" > /dev/null 2>&1 &
 echo "Here is: ${_doc}"
-echo "Shall we move it to _done?"
+echo "Shall we move it to _done? [y = yes, yn = yes and next]"
 read key
 
+again=0
 case $key in
     [yY]) mv "_incoming/${_doc}" done/; ;;
-    [yY][nN]) mv "_incoming/${_doc}" done/; $0; ;;
+    [yY][nN]) mv "_incoming/${_doc}" done/; again=1; ;;
     *) echo "What a shame..."; ;;
 esac
 
+pkill -f /usr/local/bin/pdfarranger
+
+[ $again -eq 1 ] && $0
