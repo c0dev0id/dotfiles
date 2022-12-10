@@ -4,15 +4,15 @@
 
 int main(int argc, const char *argv[])
 {
-    double no = 0;
-    for (int i=0; i<argc; i++) {
-        no += atoi(argv[i]) / 1000000;
+    unsigned long long no = 0;
+    for (int i=1; i<argc; i++) {
+        no += strtoull(argv[i], NULL, 10) / 1000000;
     }
     if (argc < 2)
-        printf("%f\n", no);
+        printf("%lld\n", no);
 
     if (argc > 1)
-        printf("%.0f\n", no / (argc - 1));
+        printf("%.0lld\n", no / (argc - 1));
 
     return 0;
 }
