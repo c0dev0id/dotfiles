@@ -62,8 +62,7 @@ set makeprg=make\ %:r
 set autowrite
 
 " Work scripts
-nnoremap mm :w\|!mymake<CR>
-nnoremap mt :w\|!mytest<CR>
+nnoremap mm :w\|!make<CR>
 
 " TEMPORARY FILES
 set undofile
