@@ -94,6 +94,7 @@ void update_battery() {
 
 int main(int argc, const char *argv[])
 {
+    setlocale(LC_CTYPE, "C");
     setlocale(LC_ALL, "en_US.UTF-8");
 
     const wchar_t sep =  0xE621; // 
@@ -117,9 +118,8 @@ int main(int argc, const char *argv[])
              sep, fan, fan_speed,
              sep, freq, cpu_base_speed, cpu_avg_speed,
              sep, time);
-
         fflush(stdout);
-        sleep(5);
+        sleep(2);
     }
     return 0;
 }

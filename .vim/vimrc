@@ -58,11 +58,8 @@ let c_space_errors=1
 let c_gnu=1
 let c_comment_strings=1
 let c_curly_error=1
-set makeprg=make\ %:r
+"set makeprg=cc\ -o\ %:r\ %
 set autowrite
-
-" Work scripts
-nnoremap mm :w\|!make<CR>
 
 " TEMPORARY FILES
 set undofile
@@ -191,6 +188,16 @@ let g:tagbar_ctags_bin = "ectags"
 " PLUGIN: EASY ALIGN
 xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
+
+" Compile Stuff
+nnoremap mm :call MyMake()<CR>
+function MyMake()
+    if filereadable("Makefile")
+        :!make
+    else
+        :!cc -o %:p:r %:p && %:p:r
+    endif
+endfunction
 
 " CUSTOM: NO CLUTTER PASTE MODE
 nnoremap <silent> <Tab> :call TogglePaste()<CR>

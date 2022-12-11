@@ -61,7 +61,9 @@ CPAN
 Crates.io
 DuckDuckGo Web Search
 DuckDuckGo Image Search
+GLIB Documentation
 Github
+LibSOUP Documentation
 Marc Info MessageID
 Marc Info OpenBSD Misc List
 Marc Info OpenBSD Ports CVS
@@ -85,6 +87,8 @@ Youtube"
         http*) DEFAULT="OPEN (default)"; ;;
         192.168.*) DEFAULT="OPEN (default)"; ;;
         gopher*) DEFAULT="OPEN (default)"; ;;
+        g_*) DEFAULT="GLIB Documentation"; ;;
+        [Ss]oup_*) DEFAULT="LibSOUP Documentation"; ;;
         www.*) DEFAULT="OPEN (default)"; ;;
         \<*@*\>) DEFAULT="Marc Info Message ID (default)"; ;;
         *.com|*.de|*.net|*.org) DEFAULT="OPEN (default)"; ;;
@@ -103,6 +107,8 @@ Youtube"
         CPAN*)      URI="https://metacpan.org/search?q=${C}"; ;;
         Crate*)     URI="https://crates.io/search?q=${C}"; ;;
         Grep*)      URI="https://grep.app/search?q=${C}"; ;;
+        GLIB*)      URI="https://docs.gtk.org/glib/flags.UriFlags.html?q=${C}"; ;;
+        LibSOUP*)   URI="https://libsoup.org/libsoup-3.0/index.html?q=${C}"; ;;
         Github)     URI="https://github.com/search?q=${C}"; ;;
         D*Web*)     URI="https://html.duckduckgo.com/html?q=${C}"; ;;
         D*Ima*)     URI="https://duckduckgo.com/?q=${C}&iax=images&ia=images"; ;;

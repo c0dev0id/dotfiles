@@ -15,9 +15,10 @@ case $SEL in
     Documents)
         DOC=$(ls -1pr $PIMDIR/documents/ | grep -v '/$' | sort -hr | $DMENU_CMD -p Documents -l 25)
         if [ ! -z "$DOC" ]; then
-            ACT=$(printf "View\nEdit\nEmail\nDelete" | $DMENU_CMD -p Action)
+            ACT=$(printf "View\nCopy\nEdit\nEmail\nDelete" | $DMENU_CMD -p Action)
             case $ACT in
                 View) mupdf "$PIMDIR/documents/$DOC" ;;
+                Copy) echo "$PIMDIR/documents/$DOC" | xclip ;;
                 Edit) pdfarranger "$PIMDIR/documents/$DOC" ;;
                 Email) texec "mutt -a \"$PIMDIR/documents/$DOC\"" ;;
                 Delete) mkdir -p /tmp/deleted_documents; mv "$PIMDIR/documents/$DOC" /tmp/deleted_documents/; ;;
