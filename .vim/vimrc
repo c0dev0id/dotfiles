@@ -23,7 +23,12 @@ set mmp=5000
 set spelllang=de,en
 set re=1
 let mapleader = ","
+
+" * and # are only highlighting
+" n searches in the direction of * or #
 nnoremap * *``
+nnoremap # #``
+nnoremap n <S-n>
 
 " INDENTATION
 set noautoindent
@@ -71,6 +76,24 @@ set directory=~/.local/vim/swapfiles//
 set updatetime=2000
 set updatecount=100
 
+" TAB LINE
+set tabline=%!Tabline()
+function! Tabline() abort
+    let l:line = ''
+    for l:i in range(1, tabpagenr('$'))
+        if l:i == tabpagenr()
+            let l:line .= '%#TabLineSel#'
+        else
+            let l:line .= '%#TabLine#'
+        endif
+        let l:label = fnamemodify(
+            \ bufname(tabpagebuflist(l:i)[tabpagewinnr(l:i) - 1]), ':t' )
+        let l:line .= '  ' . l:label . '  '
+    endfor
+    let l:line .= '%#TabLineFill#'
+    return l:line
+endfunction
+
 " CREATE DIRECTORIES
 silent execute '!mkdir -p ~/.local/vim/backup ~/.local/vim/undo ~/.local/vim/swapfiles'
 silent execute 'cs add ~/.dev/cscope.out'
@@ -88,6 +111,9 @@ let g:is_posix=1
 match ErrorMsg '\(TODO:\|FIXME\|XXX\|workaround\|WTF\|: error:.*\|\s\+$\| \+\ze\t\)'
 
 " MY THEME
+hi TabLine        ctermbg=234  ctermfg=240  cterm=NONE
+hi TabLineFill    ctermbg=234  ctermfg=240  cterm=NONE
+hi TabLineSel     ctermbg=234  ctermfg=249  cterm=NONE
 hi Comment        ctermbg=NONE ctermfg=249  cterm=italic
 hi Constant       ctermbg=NONE ctermfg=251  cterm=italic
 hi CursorLine     ctermbg=NONE ctermfg=NONE cterm=NONE
@@ -171,6 +197,10 @@ set statusline+=\ %b/0x%B
 set statusline+=\ %c\ %p%%
 set statusline+=\ 
 
+
+" OPEN FILE
+nnoremap <C-t> :Texplore<CR>
+
 " TAGS FILE
 set tags="~/.dev/tags"
 nnoremap gt :cs find 1 <C-R>=expand("<cword>")<CR><CR>
@@ -191,11 +221,12 @@ nmap ga <Plug>(EasyAlign)
 
 " Compile Stuff
 nnoremap mm :call MyMake()<CR>
+nnoremap mr :!%:p:r<CR>
 function MyMake()
     if filereadable("Makefile")
-        :!make
+        :w! | !make
     else
-        :!cc -o %:p:r %:p && %:p:r
+        :w! | !cc -o %:p:r %:p
     endif
 endfunction
 
