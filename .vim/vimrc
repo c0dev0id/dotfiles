@@ -223,6 +223,7 @@ nmap ga <Plug>(EasyAlign)
 nnoremap mm :call MyMake()<CR>
 nnoremap mr :!%:p:r<CR>
 function MyMake()
+    :silent !clear
     if filereadable("Makefile")
         :w! | !make
     else
