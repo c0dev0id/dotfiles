@@ -103,14 +103,14 @@ local clear_data = require "clear_data"
 local undoclose = require "undoclose"
 
 -- Add command to list tab history items
-local tabhistory = require "tabhistory"
+-- local tabhistory = require "tabhistory"
 
 -- Add greasemonkey-like javascript userscript support
-local userscripts = require "userscripts"
+-- local userscripts = require "userscripts"
 
 -- Add bookmarks support
-local bookmarks = require "bookmarks"
-local bookmarks_chrome = require "bookmarks_chrome"
+-- local bookmarks = require "bookmarks"
+-- local bookmarks_chrome = require "bookmarks_chrome"
 
 -- Add download support
 local downloads = require "downloads"
@@ -145,9 +145,9 @@ local completion = require "completion"
 
 -- Press Control-E while in insert mode to edit the contents of the currently
 -- focused <textarea> or <input> element, using `xdg-open`
-local open_editor = require "open_editor"
-local editor = require "editor"
-editor.editor_cmd = "hterm vim {file}"
+-- local open_editor = require "open_editor"
+-- local editor = require "editor"
+-- editor.editor_cmd = "hterm vim {file}"
 
 -- NoScript plugin, toggle scripts and or plugins on a per-domain basis.
 -- `,ts` to toggle scripts, `,tp` to toggle plugins, `,tr` to reset.
@@ -161,7 +161,7 @@ local go_next_prev = require "go_next_prev"
 local go_up = require "go_up"
 
 -- Filter Referer HTTP header if page domain does not match Referer domain
-require_web_module("referer_control_wm")
+-- require_web_module("referer_control_wm")
 
 local error_page = require "error_page"
 
@@ -184,7 +184,7 @@ follow.stylesheet = follow.stylesheet .. [===[
 -- local vertical_tabs = require "vertical_tabs"
 
 -- Add a stylesheet when showing images
-local image_css = require "image_css"
+-- local image_css = require "image_css"
 
 -- Add a new tab page
 local newtab_chrome = require "newtab_chrome"

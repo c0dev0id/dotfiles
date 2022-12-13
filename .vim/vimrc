@@ -227,7 +227,7 @@ function MyMake()
     if filereadable("Makefile")
         :w! | !make
     else
-        :w! | !cc -o %:p:r %:p
+        :w! | !cc -o %:p:r -lsndio %:p
     endif
 endfunction
 

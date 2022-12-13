@@ -158,13 +158,10 @@ alias mupdf="mupdf-gl -XJ"
 # network
 alias edit_dns="ssh -t dns.codevoid.de \"doas vim /var/nsd/zones/master/codevoid.de && doas nsd-control reload\""
 alias edit_gopher="vim sftp://gopher.codevoid.de/../www/htdocs/gopher/"
-alias ts="doas tailscale"
-ts-vpn() { doas tailscale up --exit-node=100.89.60.42; }
 
 x() { ssh -t home.codevoid.de 'tmux -u attach || tmux -u'; }
 t() { ssh -t tweety.home.codevoid.de 'tmux -u attach || tmux -u'; }
 b() { ssh -t barton.oldbsd.de 'tmux -u attach || tmux -u'; }
-
 
 netrestart() {(
     set -x
@@ -187,23 +184,7 @@ pass-reinit() {
 }
 
 cg() {
-    test -z "${1}" \
-        && echo "usage: cg <ChatNet>" \
-        && return
-
-    case ${1} in
-        b*) _net=Bitreich; ;;
-        c*) _net=CuffLink; ;;
-        e*) _net=EfNet; ;;
-        h*) _net=HackInt; ;;
-        i*) _net=IRCNet; ;;
-        l*) _net=LiberaChat; ;;
-        o*) _net=OFTC; ;;
-        r*) _net=RobustIRC; ;;
-        u*) _net=UUGRN; ;;
-        *) _net=${1}; ;;
-    esac
-
+    [ -z "$1" ] && return 2
     catgirl \
         -C copy \
         -N notify-send \
@@ -216,7 +197,7 @@ cg() {
         -r x \
         -u sdk \
         -n sdk \
-        -w "sdk@$(hostname -s)/${_net}:$(pass Internet/znc)"
+        -w "sdk@$(hostname -s)/${1}:$(pass Internet/znc)"
 }
 
 # mount
@@ -287,28 +268,19 @@ alias discord-me="firefox https://discord.com/channels/@me"
 alias discord-immortals="firefox https://discord.com/channels/991041843871502366/1000826654974812160"
 alias cups-config="firefox http://localhost:631"
 
-
 # monitoring
 lr() {
-    [ -z "$1" ] \
-        && print "l-remote <hostname>" && return
-    if [ -z "$2" ]; then
-        _xtitle "$1: /var/log/messages (all)";
-        ssh -t "$1" "doas tail -f /var/log/{messages,daemon,secure,maillog}"
-    else
-        _xtitle "$1: /var/log/messages (grep $2)";
-        ssh -t "$1" "doas tail -f /var/log/{messages,daemon,secure,maillog} | fgrep -i $2"
-    fi
+    [ -z "$1" ] && return 2
+    [ -z "$2" ] \
+        && ssh -t "$1" -- doas tail -n 4000 -f /var/log/{messages,daemon,secure,maillog} \
+        || ssh -t "$1" -- doas tail -n 4000 -f /var/log/{messages,daemon,secure,maillog} \
+            | fgrep -i "$2"
 }
 l() {
-    if [ -z "$1" ];
-    then
-        _xtitle "/var/log/messages (all)";
-        doas tail -n 4000 -f /var/log/{messages,daemon,secure,maillog}
-    else
-        _xtitle "/var/log/messages (grep: $1)";
-        doas tail -n 4000 -f /var/log/{messages,daemon,secure,maillog} | fgrep -i "$1"
-    fi
+    [ -z "$1" ] \
+        && doas tail -n 4000 -f /var/log/{messages,daemon,secure,maillog} \
+        || doas tail -n 4000 -f /var/log/{messages,daemon,secure,maillog} \
+            | fgrep -i "$1"
 }
 
 
@@ -368,115 +340,53 @@ alias omisc="mutt -f $MUTT_HOST/Virtual/OpenBSD-misc"
 # OPENBSD PORT TOOLS
 ########################################################################
 
-CVSDIR=/usr
 CVSROOT=sdk@cvs.openbsd.org:/cvs
-
 alias cvs-diff="cvs -d $CVSROOT diff -uNp"
-alias cvs-release="cvs -d $CVSROOT release"
+alias cvs-commit="doas cvs -d $CVSROOT commit"
 alias cvs-update="doas cvs -z 1 -d $CVSROOT -q up -Pd -A"
+alias cvs-release="cvs -d $CVSROOT release"
+alias cvs-checkout="doas cvs -z 1 -qd $CVSROOT checkout -P"
 
-cvs-import-simulate() {(
-    set -ex
+cvs-import-simulate() {
     cvs -d sdk@cvs.openbsd.org:/cvs -n import \
         ports/$(dirname $PWD)/$(basename $PWD) sdk sdk_$(date +"%Y%m%d")
-)}
-
-
-cvs-checkout-ports() {( set -x; cd $CVSDIR && doas cvs -z 1 -qd $CVSROOT checkout -P ports; )}
-cvs-checkout-src() {( set -x; cd $CVSDIR && doas cvs -z 1 -qd $CVSROOT checkout -P src; )}
-cvs-checkout-www() {( set -x; cd $CVSDIR && doas cvs -z 1 -qd $CVSROOT checkout -P www; )}
-cvs-checkout-xenocara() {( set -x; cd $CVSDIR && doas cvs -z 1 -qd $CVSROOT checkout -P xenocara; )}
-
-cvs-update-ports() {( set -x; cd $CVSDIR/ports && doas cvs -z 1 -d $CVSROOT -q up -Pd -A;)}
-cvs-update-src() {( set -x; cd $CVSDIR/src && doas cvs -z 1 -d $CVSROOT -q up -Pd -A;)}
-cvs-update-www() {( set -x; cd $CVSDIR/www && doas cvs -z 1 -d $CVSROOT -q up -Pd -A;)}
-cvs-update-xenocara() {( set -x; cd $CVSDIR/xenocara && doas cvs -z 1 -d $CVSROOT -q up -Pd -A;)}
-cvs-commit() {( set -x; doas cvs -d $CVSROOT commit $@; )}
-
-cvs-checkout-all() {
-    cvs-checkout-src
-    cvs-checkout-xenocara
-    cvs-checkout-ports
-    cvs-checkout-www
 }
-cvs-update-all() {
-    cvs-update-src
-    cvs-update-xenocara
-    cvs-update-ports
-    cvs-update-www
-}
+
+pmark() { echo "$PWD" | tee /var/cache/pmark; }
+
+p() { cd "$(</var/cache/pmark)" && echo $PWD; }
+pj() { cd "$(port jump $1)" && echo $PWD; }
+po() { cd "$(</var/cache/pmark)" && cd "$(make show=WRKSRC)"; }
+alias portsweep='doas find . \( -name "*.orig" -or -empty \) -delete'
+
+pdiff() {(
+    _name="$(make show=PKGNAME)"
+    _epoch="$(make show=EPOCH)"
+    _rev="$(make show=REVISION)"
+    _patchname="${_name}${_epoch:+v$_epoch}${_rev:+p$_rev}"
+    _portdir="$(echo "$PWD" | awk -F'/' '{ print $(NF-1)"/"$NF;  }')"
+    cd ../../
+    doas cvs -d sdk@cvs.openbsd.org:/cvs diff -uNp "$_portdir" \
+        > "/home/sdk/diffs/${_patchname}.diff"
+    echo "/home/sdk/diffs/${_patchname}.diff"
+
+    )}
+
+alias port-modgo-update='make MODGO_VERSION=latest modgo-gen-modules > modules.inc'
+
+alias proot-rebuild="doas proot -c /etc/proot.conf; doas chroot /home/dpb pkg_add ccache"
+alias proot-do="doas chroot /home/dpb/"
+alias dmake="doas /usr/ports/infrastructure/bin/dpb -B /home/dpb -c -p 4 -j 4"
+
+########################################################################
+# KERNEL STUFF
+########################################################################
 
 alias update-ksh="cd /usr/src/bin/ksh \
                     && doas make clean \
                     && doas make obj \
                     && doas make \
                     && doas make install"
-
-
-
-
-alias pmark="port mark"
-p() { cd "$(port src)" && echo $PWD; }
-pj() { cd "$(port jump $1)" && echo $PWD; }
-po() { cd "$(port obj)" && echo $PWD; }
-
-alias portclean="port clean"
-alias portsweep='doas find . \( -name "*.orig" -or -empty \) -delete'
-alias portdiff="port diff"
-
-alias port-modgo-update='make MODGO_VERSION=latest modgo-gen-modules > modules.inc'
-
-alias proot-rebuild="doas proot -c /etc/proot.conf; doas chroot /home/dpb pkg_add ccache"
-alias proot-do="doas chroot /home/dpb/"
-
-alias dmake="doas /usr/ports/infrastructure/bin/dpb -B /home/dpb -c -p 4 -j 4"
-
-
-dev-dir() {
-    cd "$(cat /home/sdk/.dev/dir)";
-}
-
-dlast() {
-    doas -u build vim -c ':browse oldfiles'
-}
-dvim() {
-    doas -u build vim
-}
-ddiff() {(
-    cd /usr/src
-    f="$(cat /var/cache/dmark | sed 's|/usr/src/||g')"
-    cvs-diff "$f" | tee "/home/sdk/$(basename "$f").diff"
-    readlink -f "/home/sdk/$(basename "$f").diff"
-)}
-dgrepsys() {
-    ugrep --exclude-dir="CVS" \
-          --include="*.h" \
-          --include="*.c" \
-          --include="*.txt" \
-          --include="*.pl" \
-          --include="*.pm" \
-          --include="*.sh" \
-          --recursive \
-          "$1" \
-          /usr/src/sys/
-}
-dgrep() {
-    ugrep --exclude-dir="CVS" \
-          --include="*.h" \
-          --include="*.c" \
-          --include="*.txt" \
-          --include="*.pl" \
-          --include="*.pm" \
-          --include="*.sh" \
-          --recursive \
-          "$1" \
-          /usr/src/
-}
-
-pack() {
-    doas tar czvf "$1.tgz" "$1" \
-        && readlink -f "$1.tgz"
-}
 
 ########################################################################
 # TWITCH FROM CLI
@@ -487,10 +397,7 @@ twitch-stream() {
     local API_KEY=$(pass Internet/Twitch | head -1)
     local RES=$(xrandr | grep "*+" | awk '{print $1}')
     local FAUX_OPTS="-d snd/default -m -vmic 5.0 -vmon 0.2 -r $RES -f 20 -b 4000"
-    (
-        set -x
-        fauxstream $FAUX_OPTS rtmp://live-ams.twitch.tv/app/$API_KEY
-    )
+    fauxstream $FAUX_OPTS rtmp://live-ams.twitch.tv/app/$API_KEY
 }
 
 ########################################################################
@@ -516,21 +423,36 @@ dotfiles_init() {
 # FILE SHARING
 ########################################################################
 
-dohttp_upload() {
-    local _file=$(readlink -f "$1");
-    local _name=$(cleanstring "$1");
-    scp -r "$_file" codevoid.de:/home/www/htdocs/http/$_name
-    ssh -t codevoid.de doas chown -R sdk:www "/home/www/htdocs/http/$_name"
-    printf "https://codevoid.de/h/$_name\n";
+doupload-http() {
+    [ ! -f "$1" ] && return 2
+    chmod ugo+r "$1"
+    _name=$(basename "$1");
+    scp -r "$1" codevoid.de:/tmp
+    ssh codevoid.de "doas mv /tmp/$_name /home/www/htdocs/http/$_name"
+    echo "https://codevoid.de/h/$_name";
 }
-cleanstring() {
-    printf '%s' "$1" | tr "[:upper:]ÄÖÜ " "[:lower:]äöü_" \
-        | sed 's/ä/ae/g;s/ö/oe/g;s/ü/ue/g;s/ß/ss/g';
+doupload-gopher() {
+    [ ! -f "$1" ] && return 2
+    chmod ugo+r "$1"
+    _name=$(basename "$1");
+    scp -r "$1" codevoid.de:/tmp
+    ssh codevoid.de "doas mv /tmp/$_name /home/www/htdocs/gopher/p/$_name"
+    case "$(file --mime-type -b "$1")" in
+        image/*)         S="I";;
+        text/*)          S="0";;
+        message/*)       S="0";;
+        */x-shellscript) S="0";;
+        */pgp-keys)      S="0";;
+        application/*)   S="9";;
+    esac
+    echo "https://codevoid.de/$S/p/$_name";
+    echo "gopher://codevoid.de/$S/p/$_name";
 }
 
 ########################################################################
 # YOUTUBE-DL
 ########################################################################
+
 YTDL_AGENT="Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/92.0.4506.0 Safari/537.36"
 YTDL_OPTS="-i --no-part --abort-on-unavailable-fragment --buffer-size 16K --fragment-retries 100 --http-chunk-size 10M"
 ytdl() {
@@ -576,12 +498,11 @@ xr_secondary() {
 xr_off() {
     xrandr | awk '/disconnected/ { print $1 }'
 }
-alias xrandr_portrait="sync; xrandr --output DP-1 --rotate left"
+
 xrandr_set() {
-    set -xe
     for scr in $(xr_secondary)
     do
-        xrandr --output $scr --$1 $(xr_primary) --mode 1920x1080
+        xrandr --output $scr --$1 $(xr_primary) --mode auto
     done
     for scr in $(xr_off)
     do
@@ -613,11 +534,13 @@ xrandr_4k() {
     xrandr --output $(xr_primary) --mode 3840x2160
 }
 
+alias xrandr_portrait="sync; xrandr --output DP-1 --rotate left"
+
 ########################################################################
 # GNUPG AGENT
 ########################################################################
 
-if [ -f $HOME/.gnupg/pubring.gpg ];
+if [ -f $HOME/.enable_gpg ];
 then
     GPG_TTY=$(tty)
     SSH_AUTH_SOCK=$(gpgconf --list-dirs agent-ssh-socket)
