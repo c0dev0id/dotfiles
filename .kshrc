@@ -407,7 +407,7 @@ twitch-stream() {
 # DOTFILES WITH GIT
 ########################################################################
 
-alias config='git --git-dir=$HOME/.cfg/ --work-tree=$HOME'
+alias config='git --git-dir=${HOME}/.cfg/ --work-tree=${HOME}'
 
 dotfiles_autoupdate() {
     config add -u && \
