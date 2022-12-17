@@ -18,8 +18,11 @@ PATH=\
 :/usr/games\
 :/usr/ports/infrastructure/bin\
 :/usr/local/cobol/bin
-PATH="$PATH:/opt/zodiac/bin"
+JAVA_HOME=/usr/local/jdk-11/bin
+PATH=${PATH}:${JAVA_HOME}
+PATH=${PATH}:/opt/zodiac/bin
 export PATH
+
 
 MANPATH=/usr/share/man:/usr/X11R6/man:/usr/local/man
 export MANPATH

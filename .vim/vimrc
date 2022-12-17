@@ -204,7 +204,7 @@ nnoremap <C-t> :Texplore<CR>
 " TAGS FILE
 set tags="~/.dev/tags"
 nnoremap gt :cs find 1 <C-R>=expand("<cword>")<CR><CR>
-nnoremap gg :cs find 4 <C-R>=expand("<cword>")<CR><CR>
+nnoremap gs :cs find 4 <C-R>=expand("<cword>")<CR><CR>
 nnoremap gb <c-o>
 nnoremap gh :FSHere<CR>
 
@@ -220,6 +220,7 @@ xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
 " Compile Stuff
+nnoremap mw :!cd /home/sdk/website && make<CR>
 nnoremap mm :call MyMake()<CR>
 nnoremap mr :!%:p:r<CR>
 function MyMake()
