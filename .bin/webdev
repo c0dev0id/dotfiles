@@ -1,6 +1,8 @@
 #!/bin/sh -x
 
 session=webdev
+socket=~/.tmux.sock
+arg="$1"
 
 if ! tmux att -t webdev >/dev/null 2>&1
 then
@@ -10,14 +12,22 @@ then
     # window 1
     window=1
     tmux rename-window -t $session:$window 'edit'
-    tmux send-keys -t $session:$window 'cd ~/website' Enter
+    tmux send-keys -t $session:$window 'cd ~/website/site' Enter
+    if [ ! -z "$arg" ]
+    then
+        tmux send-keys -t $session:$window "vim $arg" Enter
+    else
+        tmux send-keys -t $session:$window "nnn" Enter
+    fi
 
     # window 2
     window=2
     tmux new-window -t $session:$window -n 'build'
     tmux send-keys -t $session:$window 'cd ~/website && make notify' Enter
 
-    # cd ~/website && make show-local > /dev/null 2>&1
+    # switch back to window 1
+    tmux select-window -t $session:1
+    cd ~/website && make show-local > /dev/null 2>&1
 
     # attach to session
     tmux att -t webdev

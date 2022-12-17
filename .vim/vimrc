@@ -197,6 +197,9 @@ set statusline+=\ %b/0x%B
 set statusline+=\ %c\ %p%%
 set statusline+=\ 
 
+" ITALIC FIX
+set t_ZH=[3m
+set t_ZR=[23m
 
 " OPEN FILE
 nnoremap <C-t> :Texplore<CR>
