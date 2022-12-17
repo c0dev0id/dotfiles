@@ -1,0 +1,24 @@
+#!/bin/sh -x
+
+session=webdev
+
+if ! tmux att -t webdev >/dev/null 2>&1
+then
+    # create session
+    tmux new-session -s $session -d
+
+    # window 1
+    window=1
+    tmux rename-window -t $session:$window 'edit'
+    tmux send-keys -t $session:$window 'cd ~/website' Enter
+
+    # window 2
+    window=2
+    tmux new-window -t $session:$window -n 'build'
+    tmux send-keys -t $session:$window 'cd ~/website && make notify' Enter
+
+    # cd ~/website && make show-local > /dev/null 2>&1
+
+    # attach to session
+    tmux att -t webdev
+fi
