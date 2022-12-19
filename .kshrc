@@ -73,7 +73,7 @@ PAGER="less"
 export EDITOR VISUAL BROWSER TUIR_BROWSER PAGER
 
 ### NNN
-NNN_OPTS="cErxAJ"
+NNN_OPTS="cErxAJBR"
 NNN_OPENER="nnn.sh"
 NNN_FIFO=/tmp/nnn.fifo
 NNN_PLUG='o:-!mpv "$nnn";x:-!sh -x "$nnn";i:imgview;p:-!pdfarranger "$nnn" > /dev/null 2>&1 &'

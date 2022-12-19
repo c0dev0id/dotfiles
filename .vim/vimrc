@@ -24,6 +24,8 @@ set spelllang=de,en
 set re=1
 let mapleader = ","
 
+set formatprg=par\ -w72qie
+
 " * and # are only highlighting
 " n searches in the direction of * or #
 nnoremap * *``
@@ -231,7 +233,7 @@ function MyMake()
     if filereadable("Makefile")
         :w! | !make
     else
-        :w! | !cc -o %:p:r -lsndio %:p
+        :w! | !cc -Wall -g -O0 -o %:p:r -lsndio %:p
     endif
 endfunction
 
