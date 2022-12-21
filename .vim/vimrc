@@ -151,7 +151,6 @@ hi VisualNOS      ctermbg=NONE ctermfg=246  cterm=NONE
 hi WarningMsg     ctermbg=NONE ctermfg=NONE cterm=NONE
 hi Wildmenu       ctermbg=NONE ctermfg=NONE cterm=NONE
 
-
 " VIMDIFF COLORS
 hi DiffAdd    ctermbg=22 ctermfg=NONE cterm=NONE
 hi DiffDelete ctermbg=234 ctermfg=NONE cterm=NONE
@@ -263,6 +262,11 @@ endfunction
 function! VisualPaste()
     let file_msg = readfile(s:temp_file_path)
     call append(line("."), file_msg)
+endfunction
+
+" CUSTOM: HTMLENCODE WITHOUT PRE
+function! BlogEncode()
+    :%s/>/\&gt;/g | %s/</\&lt;/g | %s/&lt;pre&gt;/<pre>/g | %s/&lt;\/pre&gt;/<\/pre>/g
 endfunction
 
 augroup mystuff
