@@ -27,7 +27,7 @@ then
 
     # switch back to window 1
     tmux select-window -t $session:1
-    cd ~/website && make show-local > /dev/null 2>&1
+    luakit -n -u http://localhost >/dev/null 2>&1
 
     # attach to session
     tmux att -t webdev
