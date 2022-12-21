@@ -138,9 +138,12 @@ alias spectrwmrc="vim ~/.config/spectrwm/spectrwm.conf"
 alias dev-kernconf="doas vim /sys/arch/amd64/conf/GENERIC.MP"
 
 # vim-snippets
-alias snips="vim ~/.vim/bundle/vim-snipmate/snippets/sh.snippets"
-alias snipc="vim ~/.vim/bundle/vim-snipmate/snippets/c.snippets"
-alias snip="vim ~/.vim/bundle/vim-snipmate/snippets/_.snippets"
+alias snip_sh="vim ~/.vim/bundle/vim-snipmate/snippets/sh.snippets"
+alias snip_c="vim ~/.vim/bundle/vim-snipmate/snippets/c.snippets"
+alias snip__="vim ~/.vim/bundle/vim-snipmate/snippets/_.snippets"
+
+alias toot-sh="toot activate sh@bsd.network && toot tui"
+alias toot-uug="toot activate uugrn@chaos.social && toot tui"
 
 # system
 alias sudo="doas"

@@ -24,7 +24,7 @@ set spelllang=de,en
 set re=1
 let mapleader = ","
 
-set formatprg=par\ -w72qie
+set formatprg=par\ -w80qie
 
 " * and # are only highlighting
 " n searches in the direction of * or #
