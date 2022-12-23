@@ -30,6 +30,7 @@
 	defaultBranch = main
 [diff]
 	tool = vimdiff2
+	noprefix = true
 [merge]
 	tool = vimdiff2
 [safe]
