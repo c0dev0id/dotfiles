@@ -1,0 +1,46 @@
+#!/bin/sh
+
+_imgpath="$(readlink -f "$1" || exit 2)"
+_imgname="$(basename "$_imgpath")"
+_imgnamenoext="${_imgname%%.*}"
+
+cd $HOME/website/site/photos
+
+gallerydir="$((echo NEW; find * -mindepth 0 -maxdepth 0 -type d; ) | fzf)"
+
+if [ "$gallerydir" == "NEW" ]
+then
+
+    echo -n "Add new gallery name ($(date +"%Y-%m-%d_")): "
+    read -r gallerydir
+
+    [ -z "$gallerydir" ] && exit 2
+
+    echo -n "Add gallery description [y/N]: "
+    read -r gallerydescr
+    case $gallerydescr in
+        [yY]) cd $gallerydir && vim "index.txt"; ;;
+    esac
+
+fi
+
+mkdir -p "$gallerydir"
+cp "$_imgpath" "$gallerydir/"
+
+echo -n "Add image description? [y/N]: "
+read -r imagedescr
+
+case $imagedescr in
+    [yY]) vim "${gallerydir}/${_imgnamenoext}.txt"; ;;
+esac
+
+echo -n "Regenerate Website? [y/N]: "
+read -r regen
+
+case $regen in
+    [yY]) cd ~/website && make remote; ;;
+esac
+
+echo
+echo "https://stefanhagen.de/photos/$gallerydir/${_imgnamenoext}.html"
+echo

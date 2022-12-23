@@ -1,6 +1,8 @@
 #!/bin/sh
 # C-x + ?-?
 
+set -x
+
 copy_to_clipboard() {
     printf '%s\n' "Clipping $1"
     printf '%s' "$(readlink -f "$1")" \
@@ -72,6 +74,7 @@ do
         "p")      printf '%s\n' "$(readlink -f "$file")" ;;
         "u")      upload_to_paste "$file" ;;
         "x")      save_image "$file" ;;
+        "w")      website-add-image-to-gallery $file ;;
         "Right")  rotate_cw "$file" ;;
         "Left")   rotate_ccw "$file" ;;
     esac
