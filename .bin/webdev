@@ -13,20 +13,13 @@ then
     window=1
     tmux rename-window -t $session:$window 'edit'
     tmux send-keys -t $session:$window 'cd ~/website/site' Enter
-    if [ ! -z "$arg" ]
-    then
-        tmux send-keys -t $session:$window "vim $arg" Enter
-    else
-        tmux send-keys -t $session:$window "nnn" Enter
-    fi
+    tmux send-keys -t $session:$window "nnn" Enter
 
-    # window 2
-    window=2
-    tmux new-window -t $session:$window -n 'build'
-    tmux send-keys -t $session:$window 'cd ~/website && make notify' Enter
+    tmux split-window -t $session:$window -v
+    tmux resize-pane -t $session:$window.1 -y 6
+    tmux send-keys -t $session:$window.1 'cd ~/website && make notify' Enter
+    tmux select-pane -U
 
-    # switch back to window 1
-    tmux select-window -t $session:1
     luakit -n -u http://localhost >/dev/null 2>&1
 
     # attach to session

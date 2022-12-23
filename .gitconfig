@@ -1,0 +1,38 @@
+[user "git@git.codevoid.de:"]
+	name = Stefan Hagen
+	email = sh+git@codevoid.de
+[user "git@github.wdf.sap.corp:"]
+	name = Stefan Hagen
+	email = stefan.hagen@sap.com
+[user "git@github.infra.hana.ondemand.com:"]
+	name = Stefan Hagen
+	email = stefan.hagen@sap.com
+[url "git@github.wdf.sap.corp:"]
+    insteadOf = https://github.wdf.sap.corp/
+[url "git@github.infra.hana.ondemand.com:"]
+    insteadOf = https://github.infra.hana.ondemand.com/
+[user "git@git.github.com:"]
+	name = c0dev0id
+	email = sh+github@codevoid.de
+[user]
+	name = c0dev0id
+	email = sh+git@codevoid.de
+[hub]
+	host = github.wdf.sap.corp
+	protocol = git
+[http "https://github.wdf.sap.corp"]
+	sslVerify = false
+[pull]
+	rebase = true
+[push]
+	autoSetupRemote = true
+[init]
+	defaultBranch = main
+[diff]
+	tool = vimdiff2
+[merge]
+	tool = vimdiff2
+[safe]
+	directory = /usr/src
+	directory = /usr/ports
+	directory = /usr/ports/mystuff
