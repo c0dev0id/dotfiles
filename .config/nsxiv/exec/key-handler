@@ -66,15 +66,21 @@ rotate_ccw() {
     convert -rotate 270 "$1" "$1"
 }
 
+show_details() {
+    echo "$1"
+    exiftool "$1" | grep Date | tr ':' '-'
+}
+
 while read file
 do
     case "$1" in
-        "d")      edit_image "$file" ;;
+        "e")      edit_image "$file" ;;
         "c")      copy_to_clipboard "$file" ;;
-        "p")      printf '%s\n' "$(readlink -f "$file")" ;;
+        "p")      echo "$(readlink -f "$file")" ;;
         "u")      upload_to_paste "$file" ;;
         "x")      save_image "$file" ;;
-        "w")      website-add-image-to-gallery $file ;;
+        "s")      show_details "$file" ;;
+        "w")      texec "website-add-image-to-gallery $file" ;;
         "Right")  rotate_cw "$file" ;;
         "Left")   rotate_ccw "$file" ;;
     esac

@@ -15,16 +15,16 @@ then
     read -r gallerydir
 
     [ -z "$gallerydir" ] && exit 2
+    mkdir -p "$gallerydir"
 
     echo -n "Add gallery description [y/N]: "
     read -r gallerydescr
     case $gallerydescr in
-        [yY]) cd $gallerydir && vim "index.txt"; ;;
+        [yY]) vim "${gallerydir}/index.txt"; ;;
     esac
 
 fi
 
-mkdir -p "$gallerydir"
 cp "$_imgpath" "$gallerydir/"
 
 echo -n "Add image description? [y/N]: "
