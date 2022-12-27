@@ -21,6 +21,7 @@ PATH=\
 JAVA_HOME=/usr/local/jdk-11/bin
 PATH=${PATH}:${JAVA_HOME}
 PATH=${PATH}:/opt/zodiac/bin
+PATH=${PATH}:/opt/stagit/bin
 export PATH
 
 
@@ -76,7 +77,7 @@ export EDITOR VISUAL BROWSER TUIR_BROWSER PAGER
 NNN_OPTS="cErxAJBR"
 NNN_OPENER="nnn.sh"
 NNN_FIFO=/tmp/nnn.fifo
-NNN_PLUG='o:-!mpv "$nnn";x:-!sh -x "$nnn";i:imgview;p:-!pdfarranger "$nnn" > /dev/null 2>&1 &'
+NNN_PLUG='o:-!mpv "$nnn";x:!imagesort;p:!pdfarranger "$nnn" > /dev/null 2>&1 &'
 NNN_ARCHIVE="\\.(7z|bz2|gz|tar|tgz|zip)$"
 NNN_SSHFS='doas sshfs -d -o reconnect -o uid=1000 -o gid=1000'
 NNN_COLORS='#0a1b2c3d;1234'

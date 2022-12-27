@@ -20,7 +20,7 @@ save_image() {
     if [ -z "$SXIVDIR" ]
     then
         . $HOME/.bin/_config
-        SXIVDIR="$(find . -type d -maxdepth 1 | dmenu -p "Save" $DMENUOPTS)"
+        SXIVDIR="$(find * -maxdepth 0 -mindepth 0 -type d | dmenu -p "Save" $DMENUOPTS)"
         export SXIVDIR;
     fi
     printf '%s\n' "Saving $1 to $SXIVDIR/"
@@ -41,17 +41,17 @@ edit_image() {
         printf "Trying %s.%s\n" "${base}" "${type}"
         if [ -f "${base}.${type}" ]
         then
-            rawtherapee "${base}.${type}"
-            break
+            rawtherapee "${base}.${type}" &
+            exit 0
         fi
     done
-    for type in tif TIF
+    for type in tif TIF jpg JPG jpeg JPEG png PNG
     do
         printf "Trying %s.%s\n" "${base}" "${type}"
         if [ -f "${base}.${type}" ]
         then
-            gimp "${base}.${type}"
-            break
+            gimp "${base}.${type}" &
+            exit 0
         fi
     done
 }
@@ -68,20 +68,36 @@ rotate_ccw() {
 
 show_details() {
     echo "$1"
-    exiftool "$1" | grep Date | tr ':' '-'
+    exiftool "$1" | grep Date | tr ':' '-' | sed -E 's/ ([^ ]*)$/_\1/' | cut -d"+" -f1
+}
+
+help() {
+    set +x
+    echo "  x-Left  - rotate image counter clockwise"
+    echo "  x-Right - rotate image clockwise"
+    echo "  x-c     - copy image path to clipboard"
+    echo "  x-d     - delete image"
+    echo "  x-e     - find raw image and edit (cr2,orf,dng,tif)"
+    echo "  x-h     - show this help message"
+    echo "  x-i     - show image date information"
+    echo "  x-p     - print image path"
+    echo "  x-s     - save image (via dmenu directory selector)"
+    echo "  x-x     - upload to website"
+    set -x
 }
 
 while read file
 do
     case "$1" in
-        "e")      edit_image "$file" ;;
-        "c")      copy_to_clipboard "$file" ;;
-        "p")      echo "$(readlink -f "$file")" ;;
-        "u")      upload_to_paste "$file" ;;
-        "x")      save_image "$file" ;;
-        "s")      show_details "$file" ;;
-        "w")      texec "website-add-image-to-gallery $file" ;;
-        "Right")  rotate_cw "$file" ;;
         "Left")   rotate_ccw "$file" ;;
+        "Right")  rotate_cw "$file" ;;
+        "c")      copy_to_clipboard "$file" ;;
+        "d")      rm -f "$file" ;;
+        "e")      edit_image "$file" ;;
+        "h")      help ;;
+        "i")      show_details "$file" ;;
+        "p")      echo "$(readlink -f "$file")" ;;
+        "s")      save_image "$file" ;;
+        "x")      texec "website-add-image-to-gallery \"$file\"" ;;
     esac
 done

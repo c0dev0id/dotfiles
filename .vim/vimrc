@@ -24,7 +24,6 @@ set spelllang=de,en
 set re=1
 let mapleader = ","
 
-set formatprg=par\ -w80qie
 
 " * and # are only highlighting
 " n searches in the direction of * or #
@@ -52,6 +51,8 @@ let &softtabstop=&shiftwidth
 set expandtab
 set smarttab
 set textwidth=72
+set colorcolumn=72
+set formatprg=par\ -w72q
 
 set list
 set listchars=tab:»·,trail:•
@@ -109,13 +110,12 @@ set t_ut=
 set background=dark
 let g:is_posix=1
 
+
 " HIGHLIGHT SPECIAL WORDS
 match ErrorMsg '\(TODO:\|FIXME\|XXX\|workaround\|WTF\|: error:.*\|\s\+$\| \+\ze\t\)'
 
 " MY THEME
-hi TabLine        ctermbg=234  ctermfg=240  cterm=NONE
-hi TabLineFill    ctermbg=234  ctermfg=240  cterm=NONE
-hi TabLineSel     ctermbg=234  ctermfg=249  cterm=NONE
+hi ColorColumn    ctermbg=232  ctermfg=249  cterm=NONE
 hi Comment        ctermbg=NONE ctermfg=249  cterm=italic
 hi Constant       ctermbg=NONE ctermfg=251  cterm=italic
 hi CursorLine     ctermbg=NONE ctermfg=NONE cterm=NONE
@@ -129,7 +129,7 @@ hi Identifier     ctermbg=NONE ctermfg=NONE cterm=NONE
 hi Ignore         ctermbg=NONE ctermfg=NONE cterm=NONE
 hi IncSearch      ctermbg=NONE ctermfg=251  cterm=inverse
 hi LineNr         ctermbg=NONE ctermfg=240  cterm=NONE
-hi MatchParen     ctermbg=NONE ctermfg=251  cterm=bold
+hi MatchParen     ctermbg=NONE ctermfg=202  cterm=bold
 hi NonText        ctermbg=NONE ctermfg=NONE cterm=NONE
 hi Normal         ctermbg=NONE ctermfg=NONE cterm=NONE
 hi Pmenu          ctermbg=NONE ctermfg=251  cterm=inverse
@@ -140,10 +140,13 @@ hi SignColumn     ctermbg=NONE ctermfg=NONE cterm=NONE
 hi Special        ctermbg=NONE ctermfg=NONE cterm=NONE
 hi SpecialComment ctermbg=NONE ctermfg=NONE cterm=NONE
 hi SpecialKey     ctermbg=NONE ctermfg=239  cterm=NONE
-hi Statement      ctermbg=NONE ctermfg=NONE cterm=NONE
 hi Statement      ctermbg=NONE ctermfg=251  cterm=NONE
+hi Statement      ctermbg=NONE ctermfg=NONE cterm=NONE
 hi String         ctermbg=NONE ctermfg=251  cterm=NONE
 hi TODO           ctermbg=NONE ctermfg=246  cterm=italic
+hi TabLine        ctermbg=234  ctermfg=240  cterm=NONE
+hi TabLineFill    ctermbg=234  ctermfg=240  cterm=NONE
+hi TabLineSel     ctermbg=234  ctermfg=249  cterm=NONE
 hi Title          ctermbg=NONE ctermfg=246  cterm=bold
 hi Type           ctermbg=NONE ctermfg=NONE cterm=NONE
 hi Underlined     ctermbg=NONE ctermfg=251  cterm=underline
@@ -152,9 +155,9 @@ hi WarningMsg     ctermbg=NONE ctermfg=NONE cterm=NONE
 hi Wildmenu       ctermbg=NONE ctermfg=NONE cterm=NONE
 
 " VIMDIFF COLORS
-hi DiffAdd    ctermbg=22 ctermfg=NONE cterm=NONE
-hi DiffDelete ctermbg=234 ctermfg=NONE cterm=NONE
-hi DiffChange ctermbg=234 ctermfg=NONE cterm=NONE
+hi DiffAdd    ctermbg=22   ctermfg=NONE cterm=NONE
+hi DiffDelete ctermbg=234  ctermfg=NONE cterm=NONE
+hi DiffChange ctermbg=234  ctermfg=NONE cterm=NONE
 hi DiffText   ctermbg=NONE ctermfg=NONE cterm=NONE
 
 " SPLIT AND FOLD COLORS
@@ -224,9 +227,8 @@ xmap ga <Plug>(EasyAlign)
 nmap ga <Plug>(EasyAlign)
 
 " Compile Stuff
-nnoremap mw :!cd /home/sdk/website && make<CR>
 nnoremap mm :call MyMake()<CR>
-nnoremap mr :!%:p:r<CR>
+nnoremap mr :!clear && %:p:r<CR>
 function MyMake()
     :silent !clear
     if filereadable("Makefile")
