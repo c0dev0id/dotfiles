@@ -7,6 +7,7 @@ function get_shell(cmd)
     handle:close()
     if not result then
         return "(" .. error .. ")" -- chance of interrupted system call
+                                   -- if not compiled with SA_RESTART signal
     end
     return result
 end
@@ -14,8 +15,8 @@ end
 local timer = statusd.create_timer()
 
 local function update()
-    statusd.inform("shellbar", get_shell('/home/sdk/.notion/shellbar.sh'))
-    timer:set(5000, update)
+    statusd.inform("shellbar", get_shell('cbar -1'))
+    timer:set(1000, update)
 end
 
 update()

@@ -23,10 +23,11 @@ PICKLIST="paste_from_clipboard
 pick_from_history
 -----------------
 $(cat "${HISTFILE}" \
+    | sort -r \
     | cut -b 23- \
-    | sort -u \
     | egrep -v ' |^[^a-zA-Z0-9]' \
-    | fgrep '.')
+    | grep '\...'\
+)
 http://localhost"
 
 # show filtered history file

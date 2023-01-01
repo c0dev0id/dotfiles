@@ -26,7 +26,7 @@
 text/html; w3m -I %{charset} -T %t -cols "$COLUMNS" -s -no-graph -o display_link=1 -o display_link_number=1; copiousoutput;
 
 # documents
-application/pdf; zathura %s; nametemplate=%s.pdf;
+application/pdf; mupdf-gl %s; nametemplate=%s.pdf;
 application/vnd.openxmlformats-officedocument.wordprocessingml.document; libreoffice %s;
 application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; libreoffice %s;
 application/vnd.openxmlformats-officedocument.presentationml.presentation; libreoffice %s;

@@ -13,7 +13,7 @@ de.defstyle("*", {
     highlight_pixels = 1,
     shadow_pixels = 1,
     border_style = "elevated",
-    font = "-nil-profont-medium-r-normal---220-72-72-c-120-iso8859-1",
+    font = "xft:FuraCodeNerdFont:size=18",
     text_align = "center",
 })
 

@@ -21,10 +21,10 @@ HTERM="st -f $HFONT"
 #
 
 # NOTION ORANGE
-# DMENUOPTS="-fn '$DFONT'  -nb #121212 -nf #707070 -sf #FFA600 -sb #121212 -i -f"
+DMENUOPTS="-fn '$DFONT'  -nb #121212 -nf #707070 -sf #FFA600 -sb #121212 -l 20 -i -f"
 
 # SPECTRWM GREY
-DMENUOPTS="-fn '$DFONT'  -nb #121212 -nf #707070 -sf #CCCCCC -sb #121212 -b -i -f"
+# DMENUOPTS="-fn '$DFONT'  -nb #121212 -nf #707070 -sf #CCCCCC -sb #121212 -l 20 -i -f"
 
 DMENU_CMD="dmenu $DMENUOPTS"
 DMENURUN_CMD="dmenu_run $DMENUOPTS"

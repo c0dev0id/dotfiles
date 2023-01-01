@@ -137,6 +137,15 @@ alias vimrc="vim ~/.vim/vimrc"
 alias kludges="vim ~/.notion/cfg_kludges.lua"
 alias spectrwmrc="vim ~/.config/spectrwm/spectrwm.conf"
 alias dev-kernconf="doas vim /sys/arch/amd64/conf/GENERIC.MP"
+alias bookmarks="vim ~/.browser_history"
+bookmarks-clean() {
+    cat ~/.browser_history \
+        | sort -k 3 \
+        | uniq -f2 \
+        | sort \
+        > /tmp/browser_history \
+    && mv /tmp/browser_history ~/.browser_history
+}
 
 # vim-snippets
 alias snip_sh="vim ~/.vim/bundle/vim-snipmate/snippets/sh.snippets"

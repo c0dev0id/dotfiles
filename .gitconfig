@@ -37,3 +37,4 @@
 	directory = /usr/src
 	directory = /usr/ports
 	directory = /usr/ports/mystuff
+	directory = /usr/xenocara

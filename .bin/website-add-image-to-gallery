@@ -43,7 +43,7 @@ fi
 [ -z "${_name}" ] \
     && error_exit "Filename not set"
 
-cd "${HOME}/website/site/photos"
+cd "${HOME}/website/photos"
 
 gallerydir="$((echo NEW; find * -mindepth 0 -maxdepth 0 -type d; ) \
                 | fzf --prompt "Directory> " \
@@ -80,6 +80,7 @@ else
     convert "${_imgpath}" "${gallerydir}/${_name}.jpg"
 fi
 
+jhead -q -autorot "${gallerydir}/${_name}.jpg"
 jpegoptim -w 12 --all-progressive --strip-all "$gallerydir/${_name}.jpg"
 
 echo -n "Add image description? [y/N]: "

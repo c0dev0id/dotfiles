@@ -13,7 +13,7 @@ floatsb=floatsbscr:attach_new{
     unnumbered=true,
     sizepolicy='southwest',
     template='%workspace_pager',
-    passive=true,
+    passive=false,
     level=2
 }
 

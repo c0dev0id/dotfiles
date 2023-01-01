@@ -86,11 +86,25 @@ help() {
     set -x
 }
 
+keep() {
+    new="$(echo "$1" | sed 's,/2-,/1-,g')"
+    mv "$1" "$new"
+}
+remove_set() {
+    _dir="$(dirname ${file})"
+    set -x
+    mv "$_dir/1-"* .
+    rm -f "$_dir/2-"*
+    rm -rf "$_dir"
+    pkill nsxiv
+    set +x
+}
+
 while read file
 do
     case "$1" in
-        "Left")   rotate_ccw "$file" ;;
-        "Right")  rotate_cw "$file" ;;
+        "Left")   jpegtran -rotate 270 -outfile "$file" "$file" ;;
+        "Right")  jpegtran -rotate 90  -outfile "$file" "$file" ;;
         "c")      copy_to_clipboard "$file" ;;
         "d")      rm -f "$file" ;;
         "e")      edit_image "$file" ;;
@@ -98,6 +112,8 @@ do
         "i")      show_details "$file" ;;
         "p")      echo "$(readlink -f "$file")" ;;
         "s")      save_image "$file" ;;
+        "q")      remove_set "$file" ;;
         "x")      texec "website-add-image-to-gallery \"$file\"" ;;
+        "k")      keep "$file" ;;
     esac
 done
