@@ -147,6 +147,26 @@ bookmarks-clean() {
     && mv /tmp/browser_history ~/.browser_history
 }
 
+alias rem-edit="cd ~/.reminders && ./edit.sh"
+alias rem-week="remind -c+cl1 ~/.reminders"
+alias rem-all="remind -s -n1 ~/.reminders | sort"
+
+alias rem="remind -s+2 ~/.reminders | cut -d' ' -f1 -f6- | sort"
+alias rem-edit-birthdays="vim ~/.reminders/birthdays.rem"
+alias rem-edit-personal="vim ~/.reminders/personal.rem"
+
+rem-fetch-uugrn() {
+    ssh vorstand.uugrn.org \
+        "cat /home/vorstand/private/Kalender/uugrn.rem" \
+        > ~/.reminders/uugrn/uugrn.rem
+}
+rem-edit-uugrn() {
+    vim sftp://vorstand@vorstand.uugrn.org/private/Kalender/uugrn.rem \
+        && ssh -q sdk@vorstand.uugrn.org /home/sdk/.bin/make_calendar.sh
+}
+
+alias webtorrent="~/node_modules/.bin/webtorrent"
+
 # vim-snippets
 alias snip_sh="vim ~/.vim/bundle/vim-snipmate/snippets/sh.snippets"
 alias snip_c="vim ~/.vim/bundle/vim-snipmate/snippets/c.snippets"
@@ -154,6 +174,8 @@ alias snip__="vim ~/.vim/bundle/vim-snipmate/snippets/_.snippets"
 
 alias toot-sh="toot activate sh@bsd.network && toot tui"
 alias toot-uug="toot activate uugrn@chaos.social && toot tui"
+
+mpi() { curl -s "$(xclip -o)" | imv -; }
 
 # system
 alias sudo="doas"
@@ -278,7 +300,7 @@ alias terminal_bbs="telnet gopher.su 1234"
 alias terminal_unix50="ssh unix50@unix50.org"
 
 # bookmarks
-alias uug-mastodon="firefox https://chaos.social/u/uugrn"
+alias uug-mastodon="firefox https://chaos.social/@uugrn"
 alias uug-twitter="firefox https://twitter.com/@uugrn"
 alias discord-me="firefox https://discord.com/channels/@me"
 alias discord-immortals="firefox https://discord.com/channels/991041843871502366/1000826654974812160"
@@ -368,7 +390,15 @@ cvs-import-simulate() {
         ports/$(dirname $PWD)/$(basename $PWD) sdk sdk_$(date +"%Y%m%d")
 }
 
+pkg-reset() {
+    pkg_delete -cIX $(</home/sdk/pkg)
+}
 pmark() { echo "$PWD" | tee /var/cache/pmark; }
+portclean() {
+    doas rm -rf /usr/ports/{pobj/*,plist,logs,packages,bulk,update}
+    cd /usr/ports && doas make fix-permissions > /dev/null
+}
+
 
 p() { cd "$(</var/cache/pmark)" && echo $PWD; }
 pj() { cd "$(port jump $1)" && echo $PWD; }
